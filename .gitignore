@@ -1,0 +1,56 @@
+# OS / editor junk
+.DS_Store
+/.claude/
+
+# Raw working files — not needed to serve the site, and the PSD alone
+# exceeds GitHub's 100MB per-file limit
+/raw-assets/
+/*.psd
+
+# Source videos — frames already extracted into assets/frames/
+/for b.mp4
+/for c.mp4
+/untitled_Topaz Video Upscaler_2026-06-26_10-49-06_3.mp4
+
+# Design-source files and duplicates already processed into assets/
+# (same filenames also exist under assets/ or fonts/ where they're
+# actually used — these root copies are the untouched originals)
+/camerino-Regular.otf
+/camerino-Regular.woff2
+/Artboard 4.jpg
+/Artboard 44.jpg
+/Artboard 444.jpg
+/dragon and t.png
+/galgal mzal 2.svg
+/NarkissBlock-Regular-TRIAL.otf
+/ptiha.png
+/rezoa 1 2.png
+/rezoa 1 y.png
+/rezoa 2 s.png
+/rezoa 2 y.png
+/rezoa 3 s.svg
+/rezoa 3 y.svg
+/rezoa 4 m.png
+/rezoa 4 s.png
+/rezoa 4 y.png
+/rezoa 5 s.png
+/rezoa 5 y.png
+/rezoa 6 m.png
+/rezoa 6 s.png
+/rezoa 6 y.png
+/rezoa 8 y.png
+/untitled_Topaz Image Upscale_2026-07-21_15-26-27.png
+/untitled_Topaz Image Upscale_2026-07-21_15-28-30.png
+/wallpapaer for resarch.png
+/zemah l r.png
+/צמח 2 ימין.png
+/צמח 2 שמאל.png
+/גלגל מזלות.svg
+/גריד מעויין.svg
+/גריד מעויין2.svg
+/גריד משולש svg.svg
+/גריד משולש מעויין2.svg
+/גריד משולש2.svg
+/מכוון דק.svg
+/מכוון עבה.svg
+/מפת אותיות .svg

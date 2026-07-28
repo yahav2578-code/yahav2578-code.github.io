@@ -1,0 +1,756 @@
+@font-face {
+  font-family: "Camerino";
+  src: url("../fonts/camerino-Regular.woff2?v=4") format("woff2"),
+       url("../fonts/camerino-Regular.otf?v=4") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "NarkissBlock";
+  src: url("../fonts/NarkissBlock-Regular-TRIAL.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg: #faf9f6;
+  --ink: #1a1a1a;
+  --ink-soft: #3a3a38;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Camerino", serif;
+  direction: rtl;
+}
+
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.hero__grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero__grid svg {
+  width: 100%;
+  height: 100%;
+}
+
+.hero__grid :is(path, tspan, text) {
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.hero__grid-fade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent 55%, var(--bg) 96%);
+}
+
+.hero__creatures {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+  transform: scale(1.05);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.hero__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  text-align: center;
+  padding: 8vh 6vw;
+  margin-top: 12vh;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero__title {
+  opacity: 0;
+  transform: translateY(28px) scale(0.94);
+  transition: opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero__title.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* subtitle itself has no enter animation — each character is revealed
+   individually by typeInText (see main.js), so the block is visible from
+   the start and the typing motion is the entrance */
+.hero__subtitle span {
+  opacity: 0;
+  /* short and linear, not the slow ease used elsewhere on this page — a
+     longer/eased fade is what made this read as a soft "reveal" instead
+     of a typewriter-style snap; several characters would be mid-fade at
+     once whenever the per-character stagger (see typeInText in main.js)
+     was shorter than the fade itself. */
+  transition: opacity 0.05s linear;
+}
+
+.hero__title {
+  font-size: clamp(3.5rem, 13vw, 10.5rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.hero__subtitle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+  line-height: 1.25;
+  color: var(--ink-soft);
+  margin-top: 6vh;
+}
+
+.hero__subtitle p {
+  white-space: nowrap;
+}
+
+.scrub {
+  position: relative;
+  height: 400vh;
+}
+
+.scrub__sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+}
+
+.scrub__canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* --- Specimen section: live, editable type-testing rows with a slider adjuster above each --- */
+.specimen {
+  padding: 6vh 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 5vh;
+}
+
+.specimen-row {
+  width: 100%;
+}
+
+.adjuster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 50px;
+  width: 100%;
+  min-width: 0;
+}
+
+.adjuster__group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.adjuster__label,
+.adjuster__value {
+  font-size: 12px;
+  font-family: "NarkissBlock", sans-serif;
+  font-weight: 500;
+  color: #6b6b6b;
+  white-space: nowrap;
+}
+
+.adjuster__slider {
+  width: 100px;
+  cursor: ew-resize;
+  touch-action: none;
+}
+
+.adjuster__track {
+  position: relative;
+  height: 9px;
+  background: #ccc;
+}
+
+.adjuster__fill {
+  position: absolute;
+  inset: 0 0 0 auto;
+  background: var(--specimen-accent, #1a1a1a);
+}
+
+.adjuster__handle {
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--specimen-accent, #1a1a1a);
+  transform: translate(50%, -50%);
+  pointer-events: none;
+}
+
+.adjuster__color-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.adjuster__color {
+  width: 10px;
+  height: 10px;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  background: var(--specimen-accent, #1a1a1a);
+  flex: 0 0 auto;
+}
+
+.adjuster__color-code {
+  font-size: 12px;
+  font-family: "NarkissBlock", sans-serif;
+  font-weight: 500;
+  color: #6b6b6b;
+  white-space: nowrap;
+  direction: ltr;
+}
+
+.adjuster__color-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid #e4e2dc;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.adjuster__color-panel[hidden] {
+  display: none;
+}
+
+.adjuster__color-row {
+  display: flex;
+  gap: 6px;
+}
+
+.adjuster__color-dot {
+  width: 15px;
+  height: 15px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  padding: 0;
+  cursor: pointer;
+}
+
+.adjuster__color-dot--square {
+  border-radius: 2px;
+  border: none;
+}
+
+.adjuster__color-more {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px dashed #b8b8b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #6b6b6b;
+  cursor: pointer;
+}
+
+.adjuster__color-more input[type="color"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.adjuster__align {
+  display: flex;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+.adjuster__align button {
+  width: 16px;
+  height: 14px;
+  padding: 2px 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  opacity: 0.45;
+}
+
+.adjuster__align button.is-active {
+  opacity: 1;
+}
+
+.adjuster__align button span {
+  display: block;
+  height: 2px;
+  background: #6b6b6b;
+}
+
+.adjuster__align button[data-align="right"] span:nth-child(1) { width: 100%; align-self: flex-end; }
+.adjuster__align button[data-align="right"] span:nth-child(2) { width: 65%; align-self: flex-end; }
+.adjuster__align button[data-align="right"] span:nth-child(3) { width: 85%; align-self: flex-end; }
+
+.adjuster__align button[data-align="center"] span { width: 100%; align-self: center; }
+.adjuster__align button[data-align="center"] span:nth-child(2) { width: 65%; }
+.adjuster__align button[data-align="center"] span:nth-child(3) { width: 85%; }
+
+.adjuster__align button[data-align="left"] span { width: 100%; align-self: flex-start; }
+.adjuster__align button[data-align="left"] span:nth-child(2) { width: 65%; }
+.adjuster__align button[data-align="left"] span:nth-child(3) { width: 85%; }
+
+.specimen-row__crop {
+  margin-top: 30px;
+  text-align: var(--ta, right);
+}
+
+/* The "leading trim" technique (the same one AllCaps' own tester uses via
+   --tester-before-marginTop/--tester-after-marginBottom): a zero-size spacer
+   before and after the text, with a margin that pulls the real content
+   tighter than the font's own line-box metrics would allow. Set live via JS
+   (relayout()) since the exact amount depends on the current font-size/
+   line-height/line count, and needs to re-run whenever those change. */
+.specimen-row__text::before,
+.specimen-row__text::after {
+  content: "";
+  display: block;
+  width: 0;
+}
+
+.specimen-row__text::before {
+  margin-bottom: var(--trim-top, 0px);
+}
+
+.specimen-row__text::after {
+  margin-top: var(--trim-bottom, 0px);
+}
+
+.specimen-row__text {
+  display: inline-block;
+  width: fit-content;
+  max-width: 100%;
+  direction: rtl;
+  font-family: "Camerino", serif;
+  font-size: var(--fs, 100px);
+  line-height: var(--lh, 120px);
+  letter-spacing: var(--ls, 0em);
+  text-align: var(--ta, right);
+  color: var(--specimen-accent, #1a1a1a);
+  outline: none;
+  word-break: break-word;
+  white-space: normal;
+  opacity: 0;
+}
+
+.specimen-row__text:focus {
+  outline: none;
+}
+
+/* --- Plant-relief ribbon, right after the display rows (see
+   initSpecimenSection in main.js) — tall wrapper + sticky inner canvas,
+   same pinned-scrub technique as .scrub/.scrub__sticky, so the clip plays
+   out over real scroll distance instead of flashing by in its own natural
+   (short) content height. --- */
+.plant-ribbon {
+  position: relative;
+  /* bleed past .specimen's 50px side padding so the motif truly reaches the
+     viewport edge instead of stopping at the row's content box */
+  width: calc(100% + 100px);
+  margin: 0 -50px;
+  height: 350vh;
+}
+
+.plant-ribbon__sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.plant-ribbon__img {
+  width: 100%;
+  min-width: 0;
+  aspect-ratio: 2 / 1;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* --- Strip 4: dragon + phoenix, each with its own live paragraph, then one
+   giant edge-to-edge paragraph below both (see initStorySection in main.js) --- */
+.story {
+  padding: 6vh 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 5vh;
+}
+
+.story-creatures {
+  display: flex;
+  align-items: flex-start;
+  gap: 4%;
+  width: 100%;
+}
+
+.story-creature {
+  width: 48%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* bleeds past .story's 50px side padding so the illustration reaches the
+   viewport edge, same tall-wrapper + sticky-canvas technique as
+   .plant-ribbon */
+.story-image {
+  position: relative;
+  width: calc(100% + 100px);
+  margin: 0 -50px;
+  height: 350vh;
+}
+
+.story-image__sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.story-image__img {
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* --- Strip 5: zodiac wheel — tall scroll range, wheel pinned via sticky,
+   two rings (#ring-outer / #ring-inner, set up in zodiac-wheel.svg) rotate
+   in opposite directions as the section scrolls by (see initZodiacWheel in
+   main.js) --- */
+.zodiac {
+  position: relative;
+  height: 300vh;
+}
+
+.zodiac__sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.zodiac__wheel {
+  width: min(70vw, 800px);
+  height: auto;
+}
+
+.zodiac__wheel svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+/* --- Closing credits strip --- */
+.credits {
+  padding: 8vh 50px 4vh;
+  font-family: "NarkissBlock", sans-serif;
+  color: var(--ink);
+}
+
+.credits__row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 4vw;
+}
+
+/* Closing bookend of the hero's own title, right side of the row */
+.credits__title {
+  font-family: "Camerino", serif;
+  font-weight: 400;
+  font-size: clamp(3.25rem, 7.8vw, 6.5rem);
+  line-height: 1.05;
+  max-width: 50%;
+  text-align: center;
+}
+
+.credits__info {
+  flex: 0 0 auto;
+}
+
+.credits__group {
+  margin-bottom: 4vh;
+  text-align: right;
+}
+
+.credits__group p {
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+.credits__label {
+  font-weight: 700;
+  margin-bottom: 0.3em;
+}
+
+.credits__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6vh;
+  padding-top: 2vh;
+  border-top: 1px solid #e4e2dc;
+  direction: ltr;
+}
+
+.credits__links {
+  display: flex;
+  gap: 2em;
+}
+
+.credits__links a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.credits__links a:hover {
+  text-decoration: underline;
+}
+
+.credits__year {
+  color: var(--ink-soft);
+}
+
+/* --- Character map: single-glyph inspector with real metric guide lines
+   (see initCharmap in main.js — figures measured off the actual font file),
+   plus a click-to-select grid grouped by category. Edge to edge, no side
+   padding on the section itself — only the two inner columns are padded. --- */
+.charmap {
+  padding: 8vh 0;
+  font-family: "NarkissBlock", sans-serif;
+  color: var(--ink);
+}
+
+.charmap__header {
+  padding: 0 50px;
+}
+
+.charmap__header h2 {
+  font-family: "Camerino", serif;
+  font-weight: 400;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  margin-bottom: 5vh;
+}
+
+.charmap__row {
+  display: flex;
+  align-items: stretch;
+}
+
+.charmap__stage {
+  position: relative;
+  width: 50%;
+  height: 800px;
+  /* stage sits on the right (RTL, first flex child); only the outer
+     (right) side keeps the page margin — the inner side facing the grid
+     is tight, so the glyph reads as attached to it, not floating in the
+     middle of a wide empty column */
+  padding: 0 50px 0 10px;
+  flex: 0 0 auto;
+}
+
+.charmap__canvas {
+  display: block;
+}
+
+/* Stylistic-set alternates (ss01/ss02) stand in for the canvas glyph — real
+   DOM text honors font-feature-settings, canvas text does not. */
+.charmap__overlay-glyph {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-family: "Camerino", serif;
+  line-height: 1;
+  color: var(--ink);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.charmap__guide {
+  position: absolute;
+  left: 50px;
+  right: 50px;
+  height: 1px;
+  background: #d8d5cc;
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+
+.charmap__guide span {
+  background: var(--bg);
+  padding: 0 6px;
+  transform: translateY(-50%);
+  white-space: nowrap;
+}
+
+.charmap__vguide {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: #d8d5cc;
+}
+
+.charmap__vguide span {
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.charmap__categories {
+  width: 50%;
+  flex: 0 0 auto;
+  /* categories sits on the left; only the outer (left) side keeps the page
+     margin, mirroring .charmap__stage's tight inner edge on the other side
+     of the same boundary */
+  padding: 0 10px 0 50px;
+  /* each category is a full-width row stacked below the last, NOT a
+     flex-wrap of independently-sized boxes — that was the bug: without a
+     shared, definite width every category's grid computed its own column
+     count from its own content, so they drifted out of alignment with each
+     other instead of reading as one organized grid. */
+  display: flex;
+  flex-direction: column;
+  gap: 5vh;
+}
+
+.charmap__category {
+  width: 100%;
+}
+
+.charmap__category h6 {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  margin-bottom: 1.2em;
+}
+
+.charmap__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 76px);
+  gap: 8px;
+  list-style: none;
+}
+
+.charmap__item {
+  width: 76px;
+  height: 92px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.charmap__item:hover {
+  border-color: #e4e2dc;
+}
+
+.charmap__item.is-active {
+  border-color: var(--ink);
+  background: #fff;
+}
+
+.charmap__unicode {
+  font-size: 10px;
+  color: var(--ink-soft);
+}
+
+.charmap__item .charmap__glyph {
+  font-family: "Camerino", serif;
+  font-size: 48px;
+  line-height: 1;
+  color: var(--ink);
+}

@@ -1,0 +1,242 @@
+/* --- Research page: immersive hero + scroll-revealed chapters, wallpaper
+   background on every strip (see research.js for the reveal + scatter logic) --- */
+
+.research {
+  background: var(--bg);
+}
+
+.rs-section {
+  position: relative;
+  background-image: url("../assets/img/wallpaper.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.research__close {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  z-index: 20;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(250, 249, 246, 0.7);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 16px;
+  transition: background 0.2s ease;
+}
+
+.research__close:hover {
+  background: rgba(250, 249, 246, 0.95);
+}
+
+.rs-hero {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.rs-hero__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.rs-hero__title {
+  font-family: "Camerino", serif;
+  font-weight: 400;
+  font-size: clamp(3rem, 9vw, 7rem);
+  line-height: 1;
+  color: var(--ink);
+}
+
+.rs-hero__subtitle {
+  font-family: "Camerino", serif;
+  font-style: italic;
+  font-size: clamp(1.3rem, 2.4vw, 2rem);
+  color: var(--ink);
+}
+
+.rs-hero__scroll {
+  position: absolute;
+  z-index: 1;
+  bottom: 6vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: "Camerino", serif;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+}
+
+.rs-hero__arrow {
+  width: 1px;
+  height: 32px;
+  background: var(--ink-soft);
+  animation: rs-scroll-cue 1.8s ease-in-out infinite;
+}
+
+@keyframes rs-scroll-cue {
+  0%, 100% { transform: scaleY(1); opacity: 0.6; }
+  50% { transform: scaleY(0.5); opacity: 1; }
+}
+
+.rs-chapter {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10vh 50px;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rs-chapter.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.rs-chapter__title {
+  font-family: "Camerino", serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  text-align: center;
+  color: var(--ink);
+}
+
+.rs-chapter {
+  flex-direction: column;
+  gap: 6vh;
+}
+
+.rs-chapter__body {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6vw;
+}
+
+.rs-chapter__body--text-only {
+  max-width: 760px;
+}
+
+.rs-chapter__text {
+  flex: 1 1 380px;
+  font-family: "Camerino", serif;
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.rs-chapter__text p + p {
+  margin-top: 1.4em;
+}
+
+.rs-chapter__media {
+  flex: 1 1 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.rs-chapter__media img {
+  max-width: 100%;
+  border-radius: 4px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+}
+
+.rs-chapter__media--single img {
+  max-width: 420px;
+}
+
+.rs-chapter__media--three {
+  flex-wrap: wrap;
+}
+
+.rs-chapter__media--three img {
+  flex: 1 1 30%;
+  max-width: 32%;
+}
+
+@media (max-width: 860px) {
+  .rs-chapter__body {
+    flex-direction: column;
+  }
+
+  .rs-chapter__media--three img {
+    max-width: 60%;
+    flex: 1 1 45%;
+  }
+}
+
+/* Strip 2's two-block layout follows a specific reference comp — each
+   block pairs one paragraph with one image at its own size, alternating
+   which side leans toward the page's outer (right) vs inner (left) edge,
+   rather than the generic even text/media split used elsewhere. */
+.rs-chapter--split {
+  align-items: stretch;
+}
+
+.rs-chapter__block {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 4vw;
+}
+
+/* justify-content's start/end follow the RTL writing direction here
+   (flex-start = right, flex-end = left) — block a's image sits toward
+   the outer/right edge, block b's text sits toward the inner/left edge,
+   matching the reference comp's edge-to-edge asymmetric placement. */
+.rs-chapter__block--a {
+  justify-content: flex-start;
+}
+
+.rs-chapter__block--b {
+  justify-content: flex-end;
+}
+
+.rs-chapter__block .rs-chapter__text {
+  flex: 0 1 420px;
+}
+
+.rs-chapter__img--sm {
+  flex: 0 0 auto;
+  width: 22vw;
+}
+
+.rs-chapter__img--lg {
+  flex: 0 0 auto;
+  width: 30vw;
+}
+
+@media (max-width: 860px) {
+  .rs-chapter__block {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .rs-chapter__img--sm,
+  .rs-chapter__img--lg {
+    width: 80%;
+  }
+}

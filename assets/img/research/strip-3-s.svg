@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 841.89 1190.55">
+  <!-- Generator: Adobe Illustrator 30.5.1, SVG Export Plug-In . SVG Version: 2.1.4 Build 3)  -->
+  <defs>
+    <style>
+      .st0 {
+        font-size: 29.1px;
+      }
+
+      .st0, .st1 {
+        fill: #ed2d7b;
+        font-family: NarkissBlockTRIAL-Thin, 'Narkiss Block TRIAL';
+        font-weight: 200;
+      }
+
+      .st2 {
+        stroke-width: 1.84px;
+      }
+
+      .st2, .st3, .st4, .st5 {
+        fill: none;
+        stroke: #ed2d7b;
+        stroke-miterlimit: 10;
+      }
+
+      .st6 {
+        fill: #353535;
+        font-family: camerino-Regular, camerino;
+        font-size: 451.06px;
+      }
+
+      .st1 {
+        font-size: 20.89px;
+      }
+
+      .st3 {
+        stroke-width: 1.1px;
+      }
+
+      .st4 {
+        stroke-width: 1.11px;
+      }
+
+      .st5 {
+        stroke-width: 1.63px;
+      }
+    </style>
+  </defs>
+  <text class="st6" transform="translate(288.35 685.6)"><tspan x="0" y="0">א</tspan></text>
+  <g>
+    <line class="st3" x1="490.17" y1="450.05" x2="498.19" y2="435.96"/>
+    <line class="st3" x1="484.13" y1="428.94" x2="498.38" y2="436.67"/>
+  </g>
+  <g>
+    <line class="st4" x1="456.14" y1="681.85" x2="461.92" y2="697.13"/>
+    <line class="st4" x1="476.44" y1="690.75" x2="461.24" y2="696.82"/>
+  </g>
+  <g>
+    <line class="st3" x1="315.67" y1="684.97" x2="321.4" y2="700.14"/>
+    <line class="st3" x1="335.78" y1="693.81" x2="320.72" y2="699.84"/>
+  </g>
+  <text class="st0" transform="translate(278.06 555.94)"><tspan x="0" y="0">1</tspan></text>
+  <text class="st1" transform="translate(404.07 580.93)"><tspan x="0" y="0">2</tspan></text>
+  <text class="st1" transform="translate(412.16 503.37)"><tspan x="0" y="0">3</tspan></text>
+  <path class="st5" d="M290.4,548.27c97.6-71.15,53.27,112.13,30.92,150.87"/>
+  <path class="st2" d="M419.2,489.77c13.23-34.65,38.95-49.65,78.1-53.24"/>
+  <path class="st5" d="M415.81,575.34c68.54-8.2,90.09,35.82,45.94,121.13"/>
+</svg>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 841.89 1190.55">
+  <!-- Generator: Adobe Illustrator 30.5.1, SVG Export Plug-In . SVG Version: 2.1.4 Build 3)  -->
+  <defs>
+    <style>
+      .st0 {
+        stroke-width: .63px;
+      }
+
+      .st0, .st1, .st2 {
+        fill: none;
+        stroke: #ed2d7b;
+        stroke-miterlimit: 10;
+      }
+
+      .st1 {
+        stroke-width: .74px;
+      }
+
+      .st2 {
+        stroke-width: 1.1px;
+      }
+
+      .st3 {
+        font-size: 19.53px;
+      }
+
+      .st3, .st4 {
+        fill: #ed2d7b;
+        font-family: NarkissBlockTRIAL-Thin, 'Narkiss Block TRIAL';
+        font-weight: 200;
+      }
+
+      .st4 {
+        font-size: 14.02px;
+      }
+
+      .st5 {
+        fill: #353535;
+      }
+    </style>
+  </defs>
+  <path class="st2" d="M379.91,645.64c191.05,85.94,160.05-238.04,12.23-141.05"/>
+  <path class="st5" d="M398.71,596.07c44.8,23.61,99.59,22.4,98.08-15.74-2.12-57.82-65.69-58.72-87.78-29.66-2.42-14.83-3.93-25.43-3.93-42.68,3.93-9.69,59.94-30.88,81.73,7.27l1.51,2.72c5.15,10.6,9.08,20.58,12.11,30.57l-14.53-17.86c-1.21-5.75-.91-10.59.91-15.44,8.78-23.91,50.85-32.99,71.74-11.2,2.72,9.38,2.12,26.03-2.12,46.62-1.51-20.58-45.89-28.48-55.88-1.54l-.12-.58c23.31,78.1-27.55,120.48-114.42,92.32,1.51-7.26,6.96-22.4,12.71-44.8Z"/>
+  <text class="st4" transform="translate(488.88 500.08)"><tspan x="0" y="0">2</tspan></text>
+  <g>
+    <line class="st0" x1="392.84" y1="495.87" x2="391.85" y2="505.03"/>
+    <line class="st0" x1="400.77" y1="505.5" x2="391.59" y2="504.7"/>
+  </g>
+  <g>
+    <line class="st1" x1="557.98" y1="497.26" x2="567.51" y2="502.5"/>
+    <line class="st1" x1="572.09" y1="493" x2="567.04" y2="502.64"/>
+  </g>
+  <path class="st1" d="M496.72,494.79c28.87-22.12,64.22-13.31,70.41,7.08"/>
+  <text class="st3" transform="translate(371.92 649.99)"><tspan x="0" y="0">1</tspan></text>
+</svg>
