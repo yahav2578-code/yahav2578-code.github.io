@@ -430,22 +430,21 @@ function buildSpecimenRow(section, rowConfig) {
   // slightly-off measurement can never hard-clip a glyph, just under/over
   // space it a little.
   //
-  // Range.getClientRects() reflects the browser's own real layout of the
-  // line box, and empirically it already tracks the real drawn ink closely
-  // for this font — confirmed on a live 750px row, where inkTop was only 4px
-  // off from the line box's own top. An earlier version of this function
-  // additionally added a canvas.measureText()-based "ascent gap"
-  // (fontBoundingBoxAscent − actualBoundingBoxAscent) on top of that,
-  // meant to catch cases where the line box's declared ascent diverges from
-  // the ink — but for this font (whose OS/2/hhea metrics are known broken —
-  // see the character-map calibration work) that canvas-based gap doesn't
-  // describe the same box the Range measures at all: it was measured at
-  // 237px on that same row, when only 4px of correction was actually
-  // needed. Adding it double-counted the correction and pulled the ink up
-  // by 241px total — at large display sizes (750px+) that's enough to push
-  // the ink entirely above its own row, rendering it invisible above
-  // whatever precedes it on the page. Range alone is the reliable measure
-  // here; canvas's declared-metric-based gap is not.
+  // Range.getClientRects() reflects the browser's own real layout of the line
+  // box, whatever metrics table it draws that from — reliable, and what the
+  // exact top gap (crop's 10px margin) was measured and confirmed against.
+  // But the line box's top/bottom edges follow the font's *declared*
+  // ascent/descent, not the real drawn ink: camerino's decorative tails (ק,
+  // for one) draw deeper than the declared descent, while plain Hebrew
+  // letters (no ascenders) don't reach nearly as high as the declared ascent
+  // — leaving visible dead air above the glyphs even once the line box itself
+  // sits flush against the crop. So for both edges: keep Range for the line
+  // box's own position (reliable), and separately ask canvas.measureText() —
+  // which reports the real drawn ink via actualBoundingBox* — how far each
+  // edge's ink falls short of (top) or overshoots (bottom) the font's
+  // declared metrics, and fold that ink-only correction in on top of the
+  // line-box trim (0 in both cases if the font's metrics already matched the
+  // ink exactly).
   function relayout() {
     text.style.setProperty("--trim-top", "0px");
     text.style.setProperty("--trim-bottom", "0px");
@@ -462,6 +461,12 @@ function buildSpecimenRow(section, rowConfig) {
     const ctx = canvas.getContext("2d");
     ctx.font = `${cs.fontSize} ${cs.fontFamily}`;
 
+    const firstMetrics = ctx.measureText(lines[0] || "");
+    const ascentGap = Math.max(
+      0,
+      (firstMetrics.fontBoundingBoxAscent || 0) - (firstMetrics.actualBoundingBoxAscent || 0)
+    );
+
     const lastMetrics = ctx.measureText(lines[lines.length - 1] || "");
     const overshoot = Math.max(
       0,
@@ -469,7 +474,7 @@ function buildSpecimenRow(section, rowConfig) {
     );
 
     const trimTop = inkTop - textTop; // dead space above the line box, to remove
-    text.style.setProperty("--trim-top", `${-trimTop}px`);
+    text.style.setProperty("--trim-top", `${-(trimTop + ascentGap)}px`);
     text.style.setProperty("--trim-bottom", `${overshoot}px`);
   }
 
