@@ -7,6 +7,18 @@ document.addEventListener("DOMContentLoaded", () => {
   initCharmap();
 });
 
+// Used only by buildSpecimenRow's relayout() — see the comment there.
+// Range.getClientRects() was confirmed (directly, via Safari's own console,
+// three times over) to measure this font's line box fundamentally
+// differently in Safari than in Chrome: not just "a bit more," but by
+// enough to have cut into the real glyph ink once applied in full. There's
+// no clamp that's simultaneously small enough to stop that and large
+// enough to still close Chrome's much smaller gap, because they aren't the
+// same measurement scaled differently — Safari's number just isn't usable
+// here. A one-off UA check for a proven, engine-specific measurement bug
+// (not feature-detectable any other way) is the pragmatic choice.
+const IS_SAFARI = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
 // --- Strip 1: hero intro — the single combined grid SVG types in letter-by-letter and stays ---
 function initHeroIntro() {
   const grid = document.getElementById("heroGrid");
@@ -471,34 +483,21 @@ function buildSpecimenRow(section, rowConfig) {
   // margin on the text box itself + an explicit clipped height.
   //
   // Range.getClientRects() reflects the browser's own real layout of the
-  // line box, and for this font (whose own OS/2/hhea metrics are known
-  // broken — see the character-map calibration work) that measurement is
-  // browser-specific: Chrome's version of the gap is small (a handful of
-  // px), but Safari was directly confirmed (via its own console) to report
-  // a much larger one for the same font/content.
-  //
-  // That used to mean capping the correction at a fraction of the font's
-  // own size, to stop a bad reading from doing anything dramatic — but
-  // with nothing else containing it, that same cap also stopped Safari's
-  // (legitimately larger, for whatever reason) correction from ever
-  // fully closing its gap, most visibly on the biggest display rows. Now
-  // that `.specimen-row__crop` has its own `overflow: hidden` (see
-  // style.css): that establishes a block formatting context, so a
-  // negative margin here can no longer collapse through to shift the crop
-  // itself, and any ink a measurement pushes past the crop's own top edge
-  // just gets clipped right there instead of bleeding into the adjuster.
-  // The clamp's job is already done by that CSS boundary, so trim-top is
-  // applied in full, in every browser, trusting the crop to contain
-  // whatever it produces.
+  // line box, and empirically it tracks the real drawn ink closely for this
+  // font (whose own OS/2/hhea metrics are known broken — see the
+  // character-map calibration work) — but only in Chrome. Directly
+  // confirmed, three rounds of fixes in a row: Safari doesn't just report a
+  // *bigger* version of the same gap (no fixed cap or clamp bridges that),
+  // it reports a value that, applied in full, pulls the ink up far enough
+  // to clip into the real glyphs — not just the dead space above them. The
+  // measurement itself isn't usable there, at any scale, so it's skipped
+  // entirely in Safari (see IS_SAFARI) rather than approximated — leaving a
+  // small, harmless amount of extra leading above the ink in that one
+  // browser instead of guessing at a correction that has twice already
+  // turned out wrong in a different way.
   function relayout() {
     text.style.setProperty("--trim-top", "0px");
     text.style.setProperty("--trim-bottom", "0px");
-    const textTop = text.getBoundingClientRect().top;
-    const range = document.createRange();
-    range.selectNodeContents(text);
-    const rects = Array.from(range.getClientRects());
-    if (!rects.length) return;
-    const inkTop = rects[0].top;
 
     const lines = getRenderedLines(text);
     const cs = getComputedStyle(text);
@@ -511,10 +510,19 @@ function buildSpecimenRow(section, rowConfig) {
       0,
       (lastMetrics.actualBoundingBoxDescent || 0) - (lastMetrics.fontBoundingBoxDescent || 0)
     );
+    text.style.setProperty("--trim-bottom", `${overshoot}px`);
+
+    if (IS_SAFARI) return;
+
+    const textTop = text.getBoundingClientRect().top;
+    const range = document.createRange();
+    range.selectNodeContents(text);
+    const rects = Array.from(range.getClientRects());
+    if (!rects.length) return;
+    const inkTop = rects[0].top;
 
     const trimTop = inkTop - textTop; // dead space above the line box, to remove
     text.style.setProperty("--trim-top", `${-trimTop}px`);
-    text.style.setProperty("--trim-bottom", `${overshoot}px`);
   }
 
   // responsiveFs()'s clamp() scales font-size against viewport width, and
