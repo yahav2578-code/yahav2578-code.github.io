@@ -380,14 +380,11 @@ body {
   margin-top: 30px;
   text-align: var(--ta, right);
   /* Deliberately no overflow:hidden. It was added briefly as a safety net
-     to contain the trim-top negative margin, but relayout() (main.js) now
-     skips that calculation in Safari entirely (see IS_SAFARI) — there's no
-     negative margin left there to contain. With overflow:hidden still on,
-     Safari's own box-sizing for this font (whose metrics are known broken)
-     turned out to clip the *top* of the glyphs at large sizes independent
-     of trim-top's value — confirmed directly, with trim-top already at 0.
-     Removing it restores the original behavior this row type always had:
-     no clipping is possible, ever, in any browser, at the cost of letting
+     while trim-top's correction came from browser text-metrics APIs that
+     turned out to disagree wildly between engines — with the measurement
+     now based on an actual pixel scan of the rendered ink instead (see
+     measureInkTopFraction in main.js), that risk is gone at the source.
+     No clipping is possible, ever, in any browser, at the cost of letting
      a wrong measurement under/over-space a row instead of hard-cropping it
      — the same tradeoff the rest of this technique already makes. */
 }
