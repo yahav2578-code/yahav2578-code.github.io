@@ -470,30 +470,35 @@ function buildSpecimenRow(section, rowConfig) {
   // zero-size ::before/::after spacer with a calculated margin, instead of a
   // margin on the text box itself + an explicit clipped height.
   //
-  // --trim-top used to pull the ink up via a *negative* margin on the
-  // ::before spacer, based on Range.getClientRects() measuring the dead
-  // space above the line box. That measurement is browser-specific for a
-  // font whose own metrics are known broken (see the character-map
-  // calibration work) — Chrome's version of it was small and safe, but
-  // Safari was directly confirmed (via its own console) to report a much
-  // larger gap for the same font/content, and worse, a negative margin
-  // that big visually paints the glyphs above this element's own
-  // getBoundingClientRect() top in Safari specifically — so even a clamped
-  // version of that correction still let the ink bleed into the adjuster
-  // row above it. A capped-but-still-negative margin was not a safe
-  // enough bound; only *never pulling upward at all* is. --trim-top is
-  // fixed at 0 for exactly that reason — a small, harmless amount of extra
-  // leading above the ink in every browser, instead of a browser-specific
-  // collision that has now broken production twice.
+  // Range.getClientRects() reflects the browser's own real layout of the
+  // line box, and for this font (whose own OS/2/hhea metrics are known
+  // broken — see the character-map calibration work) that measurement is
+  // browser-specific: Chrome's version of the gap is small (a handful of
+  // px), but Safari was directly confirmed (via its own console) to report
+  // a much larger one for the same font/content — every row hit the 20%
+  // safety clamp below. A negative margin that size also turned out to
+  // visually paint the glyphs above this element's own
+  // getBoundingClientRect() top in Safari specifically, bleeding into the
+  // adjuster row above regardless of the clamp.
   //
-  // --trim-bottom is unaffected by that risk: it only ever *adds* margin
-  // below the last line (for camerino's decorative tails, which draw
-  // deeper than the font's declared descent), so even a wrong/oversized
-  // value can push the *next* element further away — never cause an
-  // overlap the way a negative top margin can.
+  // The fix isn't to stop trimming (that loses the tight fit the design
+  // wants and did visibly regress it) — it's `.specimen-row__crop`'s own
+  // `overflow: hidden` (see style.css): that establishes a block formatting
+  // context, so a negative margin here can no longer collapse through to
+  // shift the crop itself, and if a bad measurement ever tries to push the
+  // ink past the crop's own top edge, it gets clipped right there instead
+  // of bleeding into the adjuster. Worst case in a browser with a bad
+  // reading is a barely-noticeable clipped pixel or two — never a full
+  // row collision.
   function relayout() {
     text.style.setProperty("--trim-top", "0px");
     text.style.setProperty("--trim-bottom", "0px");
+    const textTop = text.getBoundingClientRect().top;
+    const range = document.createRange();
+    range.selectNodeContents(text);
+    const rects = Array.from(range.getClientRects());
+    if (!rects.length) return;
+    const inkTop = rects[0].top;
 
     const lines = getRenderedLines(text);
     const cs = getComputedStyle(text);
@@ -507,12 +512,18 @@ function buildSpecimenRow(section, rowConfig) {
       (lastMetrics.actualBoundingBoxDescent || 0) - (lastMetrics.fontBoundingBoxDescent || 0)
     );
 
-    // Same cross-browser-measurement caution as above: bound it to a small
-    // fraction of the font's own size so a bad reading can only ever add a
-    // little too much trailing space, never something dramatic.
-    const fontSizePx = parseFloat(cs.fontSize) || 0;
-    const clampedOvershoot = Math.min(overshoot, fontSizePx * 0.2);
+    const trimTop = inkTop - textTop; // dead space above the line box, to remove
 
+    // Bound both corrections to a fraction of the font's own size — a
+    // legitimate trim is always a small fine-tuning nudge, never a large
+    // fraction of the font size. This is a second line of defense on top
+    // of the crop's own overflow:hidden, not the only one.
+    const fontSizePx = parseFloat(cs.fontSize) || 0;
+    const maxCorrection = fontSizePx * 0.2;
+    const clampedTrimTop = Math.max(-maxCorrection, Math.min(maxCorrection, trimTop));
+    const clampedOvershoot = Math.min(overshoot, maxCorrection);
+
+    text.style.setProperty("--trim-top", `${-clampedTrimTop}px`);
     text.style.setProperty("--trim-bottom", `${clampedOvershoot}px`);
   }
 

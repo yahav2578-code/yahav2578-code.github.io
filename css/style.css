@@ -379,6 +379,14 @@ body {
 .specimen-row__crop {
   margin-top: 30px;
   text-align: var(--ta, right);
+  /* Establishes a new block formatting context: negative margins on the
+     text's own ::before spacer (see relayout() in main.js) can no longer
+     collapse through and shift *this* element, and any ink that gets
+     pulled far enough up to spill past the crop's own top edge is clipped
+     right here instead of visually bleeding into the adjuster row above —
+     the safety net that lets the trim correction stay tight without risking
+     the cross-browser overlap it caused before. */
+  overflow: hidden;
 }
 
 /* The "leading trim" technique (the same one AllCaps' own tester uses via
