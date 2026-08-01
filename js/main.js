@@ -7,67 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initCharmap();
 });
 
-// Used only by buildSpecimenRow's relayout() — see the comment there.
-// Every text-metrics API tried for finding the dead space above a line's
-// real ink (Range.getClientRects(), canvas TextMetrics' actualBoundingBox*)
-// turned out to be an engine-specific *declared* number for this font
-// (whose own metrics are known broken), not a measurement of what's
-// actually drawn — confirmed directly to diverge wildly between Chrome and
-// Safari, in both directions, for the same font/content.
-//
-// This instead renders the exact text to an offscreen canvas at a large
-// fixed sample size and scans the actual pixel data for the first
-// non-transparent row — literally finding where the ink starts, the one
-// thing every rendering engine has to agree on since they're all drawing
-// the same font file. The result is a ratio (dead space as a fraction of
-// font-size) cached per distinct text+font, so the expensive pixel scan
-// only runs once per row, not on every relayout.
-function measureInkTopFraction(text, fontFamily) {
-  if (!text) return 0;
-  const cacheKey = fontFamily + "|" + text;
-  if (measureInkTopFraction._cache === undefined) measureInkTopFraction._cache = {};
-  if (measureInkTopFraction._cache[cacheKey] !== undefined) {
-    return measureInkTopFraction._cache[cacheKey];
-  }
-
-  const sampleSize = 300;
-  const canvas = document.createElement("canvas");
-  canvas.width = sampleSize * 8;
-  canvas.height = sampleSize * 2;
-  const ctx = canvas.getContext("2d");
-  ctx.font = `${sampleSize}px ${fontFamily}`;
-  ctx.textBaseline = "alphabetic";
-  ctx.fillStyle = "#000";
-  const baselineY = Math.round(sampleSize * 1.3);
-  ctx.fillText(text, 4, baselineY);
-
-  const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  let inkTopY = null;
-  outer: for (let y = 0; y < canvas.height; y++) {
-    for (let x = 0; x < canvas.width; x++) {
-      if (data[(y * canvas.width + x) * 4 + 3] > 10) {
-        inkTopY = y;
-        break outer;
-      }
-    }
-  }
-
-  let fraction = 0;
-  if (inkTopY !== null) {
-    const metrics = ctx.measureText(text);
-    const declaredAscent = metrics.fontBoundingBoxAscent || sampleSize * 0.8;
-    const inkDistanceAboveBaseline = baselineY - inkTopY;
-    // Positive only: real dead space above the ink, to remove. Never
-    // negative (which would mean the ink overflows the declared ascent) —
-    // pushing content *down* to compensate risks colliding with whatever
-    // sits above the row, the opposite of what this is trying to avoid.
-    fraction = Math.max(0, (declaredAscent - inkDistanceAboveBaseline) / sampleSize);
-  }
-
-  measureInkTopFraction._cache[cacheKey] = fraction;
-  return fraction;
-}
-
 // --- Strip 1: hero intro — the single combined grid SVG types in letter-by-letter and stays ---
 function initHeroIntro() {
   const grid = document.getElementById("heroGrid");
@@ -529,35 +468,57 @@ function buildSpecimenRow(section, rowConfig) {
   // Same "leading trim" technique as AllCaps' own tester (found via their
   // computed --tester-before-marginTop / --tester-after-marginBottom): a
   // zero-size ::before/::after spacer with a calculated margin, instead of a
-  // margin on the text box itself + an explicit clipped height.
+  // margin on the text box itself + an explicit clipped height. That means
+  // the row's own box model does the collapsing — no overflow:hidden, so a
+  // slightly-off measurement can never hard-clip a glyph, just under/over
+  // space it a little.
   //
-  // --trim-top comes from measureInkTopFraction (above) — an actual pixel
-  // scan of the rendered glyphs, not any browser's text-metrics API. Every
-  // API tried (Range.getClientRects(), canvas TextMetrics' actualBoundingBox*)
-  // reported a *declared* number for this font (whose own metrics are known
-  // broken) that diverged wildly between Chrome and Safari, in both
-  // directions. Real rendered pixels are the one thing both engines have to
-  // agree on, since they're drawing the same font file.
+  // Range.getClientRects() reflects the browser's own real layout of the line
+  // box, whatever metrics table it draws that from — reliable, and what the
+  // exact top gap (crop's 10px margin) was measured and confirmed against.
+  // But the line box's top/bottom edges follow the font's *declared*
+  // ascent/descent, not the real drawn ink: camerino's decorative tails (ק,
+  // for one) draw deeper than the declared descent, while plain Hebrew
+  // letters (no ascenders) don't reach nearly as high as the declared ascent
+  // — leaving visible dead air above the glyphs even once the line box itself
+  // sits flush against the crop. So for both edges: keep Range for the line
+  // box's own position (reliable), and separately ask canvas.measureText() —
+  // which reports the real drawn ink via actualBoundingBox* — how far each
+  // edge's ink falls short of (top) or overshoots (bottom) the font's
+  // declared metrics, and fold that ink-only correction in on top of the
+  // line-box trim (0 in both cases if the font's metrics already matched the
+  // ink exactly).
   function relayout() {
     text.style.setProperty("--trim-top", "0px");
     text.style.setProperty("--trim-bottom", "0px");
+    const textTop = text.getBoundingClientRect().top;
+    const range = document.createRange();
+    range.selectNodeContents(text);
+    const rects = Array.from(range.getClientRects());
+    if (!rects.length) return;
+    const inkTop = rects[0].top;
 
     const lines = getRenderedLines(text);
     const cs = getComputedStyle(text);
-    const fontSizePx = parseFloat(cs.fontSize) || 0;
     const canvas = relayout._canvas || (relayout._canvas = document.createElement("canvas"));
     const ctx = canvas.getContext("2d");
     ctx.font = `${cs.fontSize} ${cs.fontFamily}`;
+
+    const firstMetrics = ctx.measureText(lines[0] || "");
+    const ascentGap = Math.max(
+      0,
+      (firstMetrics.fontBoundingBoxAscent || 0) - (firstMetrics.actualBoundingBoxAscent || 0)
+    );
 
     const lastMetrics = ctx.measureText(lines[lines.length - 1] || "");
     const overshoot = Math.max(
       0,
       (lastMetrics.actualBoundingBoxDescent || 0) - (lastMetrics.fontBoundingBoxDescent || 0)
     );
-    text.style.setProperty("--trim-bottom", `${overshoot}px`);
 
-    const inkTopFraction = measureInkTopFraction(lines[0] || "", cs.fontFamily);
-    text.style.setProperty("--trim-top", `${-(inkTopFraction * fontSizePx)}px`);
+    const trimTop = inkTop - textTop; // dead space above the line box, to remove
+    text.style.setProperty("--trim-top", `${-(trimTop + ascentGap)}px`);
+    text.style.setProperty("--trim-bottom", `${overshoot}px`);
   }
 
   // responsiveFs()'s clamp() scales font-size against viewport width, and

@@ -379,14 +379,6 @@ body {
 .specimen-row__crop {
   margin-top: 30px;
   text-align: var(--ta, right);
-  /* Deliberately no overflow:hidden. It was added briefly as a safety net
-     while trim-top's correction came from browser text-metrics APIs that
-     turned out to disagree wildly between engines — with the measurement
-     now based on an actual pixel scan of the rendered ink instead (see
-     measureInkTopFraction in main.js), that risk is gone at the source.
-     No clipping is possible, ever, in any browser, at the cost of letting
-     a wrong measurement under/over-space a row instead of hard-cropping it
-     — the same tradeoff the rest of this technique already makes. */
 }
 
 /* The "leading trim" technique (the same one AllCaps' own tester uses via
