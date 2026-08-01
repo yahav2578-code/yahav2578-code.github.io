@@ -483,18 +483,18 @@ function buildSpecimenRow(section, rowConfig) {
   // margin on the text box itself + an explicit clipped height.
   //
   // Range.getClientRects() reflects the browser's own real layout of the
-  // line box, and empirically it tracks the real drawn ink closely for this
-  // font (whose own OS/2/hhea metrics are known broken — see the
-  // character-map calibration work) — but only in Chrome. Directly
-  // confirmed, three rounds of fixes in a row: Safari doesn't just report a
-  // *bigger* version of the same gap (no fixed cap or clamp bridges that),
-  // it reports a value that, applied in full, pulls the ink up far enough
-  // to clip into the real glyphs — not just the dead space above them. The
-  // measurement itself isn't usable there, at any scale, so it's skipped
-  // entirely in Safari (see IS_SAFARI) rather than approximated — leaving a
-  // small, harmless amount of extra leading above the ink in that one
-  // browser instead of guessing at a correction that has twice already
-  // turned out wrong in a different way.
+  // line box; canvas.measureText()'s actualBoundingBoxAscent reports how
+  // far the real drawn ink diverges from the font's *declared* ascent for
+  // this font (whose own OS/2/hhea metrics are known broken). Combining
+  // both is the original, long-used formula for Chrome, restored here after
+  // briefly dropping the canvas term — that term can occasionally read very
+  // large for specific content/sizes (documented separately as a historical
+  // bug at certain sizes), but for the actual rows in use it's what
+  // produces the intended tight fit, confirmed directly against the
+  // pre-regression result. In Safari it's skipped entirely — see IS_SAFARI
+  // below — Range.getClientRects() was confirmed there to report a value
+  // that, applied at all, clips into the real glyphs rather than just the
+  // dead space above them, so neither term is usable in that browser.
   function relayout() {
     text.style.setProperty("--trim-top", "0px");
     text.style.setProperty("--trim-bottom", "0px");
@@ -521,8 +521,14 @@ function buildSpecimenRow(section, rowConfig) {
     if (!rects.length) return;
     const inkTop = rects[0].top;
 
+    const firstMetrics = ctx.measureText(lines[0] || "");
+    const ascentGap = Math.max(
+      0,
+      (firstMetrics.fontBoundingBoxAscent || 0) - (firstMetrics.actualBoundingBoxAscent || 0)
+    );
+
     const trimTop = inkTop - textTop; // dead space above the line box, to remove
-    text.style.setProperty("--trim-top", `${-trimTop}px`);
+    text.style.setProperty("--trim-top", `${-(trimTop + ascentGap)}px`);
   }
 
   // responsiveFs()'s clamp() scales font-size against viewport width, and
