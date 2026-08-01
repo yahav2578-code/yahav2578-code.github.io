@@ -42,7 +42,7 @@ function initHeroIntro() {
   if (hero && creatures) {
     const maxShiftX = 24;
     const maxShiftY = 14;
-    const creaturesScale = 1.05;
+    const creaturesScale = 1.05; // keep in sync with .hero__creatures' base transform in style.css
     // title/subtitle drift too, at a fraction of the image's shift — the
     // smaller movement reads as "closer" to the viewer than the image,
     // giving the hover a sense of depth instead of everything moving as
@@ -331,9 +331,9 @@ const SPECIMEN_SLIDERS = [
 
 // Font sizes (px) are fixed exactly per explicit request, not auto-fit.
 const SPECIMEN_ROWS = [
-  { text: "קמרינו", fs: 750, ls: 0, autoFit: false },
-  { text: "מחזור רוטשילד פירנצה", fs: 210, ls: 0, autoFit: false },
-  { text: "רנסנס", fs: 843, ls: 0, autoFit: false },
+  { text: "קמרינו", fs: 660, ls: 0, autoFit: false },
+  { text: "מחזור רוטשילד פירנצה", fs: 193, ls: 0, autoFit: false },
+  { text: "רנסנס", fs: 733, ls: 0, autoFit: false },
 ].map((r) => ({ ...r, lh: r.lh || Math.round(r.fs * 1.05) }));
 
 // The body paragraph and the two caption lines are all live specimen-rows too
@@ -353,14 +353,26 @@ const STORY_ROWS = [
     ls: 0,
     align: "center",
     autoFit: false,
+    // this is a real paragraph — meant to wrap between words across
+    // several lines by design, not shrink down to one line like the
+    // titles/captions (see enforceNoBreak in buildSpecimenRow)
+    wrapOk: true,
   },
   {
+    // edge-to-edge single line by explicit request — enforceNoBreak's
+    // shrink loop uses setRawValue (below) so it isn't capped at the
+    // sliders' own 20px UI floor when a narrow phone needs it smaller.
     text: "עיצוב גופן המבוסס על כתב ידו של אברהם יהודה בן יחיאל מקמרינוכתב עברי חצי קורסיבי",
-    fs: 59,
+    fs: 51,
     ls: 0,
     autoFit: false,
   },
-  { text: "זורמת, כמעט נעה, כזו שנמצאת בין מסורת לתנועה", fs: 102, ls: 0, autoFit: false },
+  {
+    text: "זורמת, כמעט נעה, כזו שנמצאת בין מסורת לתנועה",
+    fs: 89,
+    ls: 0,
+    autoFit: false,
+  },
 ].map((r) => ({ ...r, lh: Math.round(r.fs * 1.05) }));
 
 function initSpecimenSection() {
@@ -402,6 +414,21 @@ function buildPlantRibbon(section) {
   });
 }
 
+// Rows with an explicit, hand-picked pixel size (autoFit:false) were tuned
+// against one specific (desktop) viewport width — on a narrower screen the
+// same px value can overflow or force a break mid-word. clamp() scales that
+// same design value proportionally with viewport width instead, staying
+// exactly the requested px at the reference width (1600px, what these were
+// tuned against) and shrinking/growing from there — a floor and ceiling
+// keep it from ever going unreadably small or absurdly large. Rows that
+// auto-fit their own row width (autoFit !== false) don't need this: the
+// fit-to-width pass in buildSpecimenRow already recomputes their size live
+// against whatever width the row actually has.
+function responsiveFs(px, { ref = 1600, minRatio = 0.15, maxRatio = 1.3 } = {}) {
+  const vw = (px / ref) * 100;
+  return `clamp(${(px * minRatio).toFixed(1)}px, ${vw.toFixed(3)}vw, ${(px * maxRatio).toFixed(1)}px)`;
+}
+
 function buildSpecimenRow(section, rowConfig) {
   const row = document.createElement("div");
   row.className = "specimen-row";
@@ -418,8 +445,13 @@ function buildSpecimenRow(section, rowConfig) {
   text.spellcheck = false;
   text.dir = "rtl";
   text.textContent = rowConfig.text;
-  text.style.setProperty("--fs", `${rowConfig.fs}px`);
-  text.style.setProperty("--lh", `${rowConfig.lh}px`);
+  if (rowConfig.autoFit === false) {
+    text.style.setProperty("--fs", responsiveFs(rowConfig.fs));
+    text.style.setProperty("--lh", responsiveFs(rowConfig.lh));
+  } else {
+    text.style.setProperty("--fs", `${rowConfig.fs}px`);
+    text.style.setProperty("--lh", `${rowConfig.lh}px`);
+  }
   text.style.setProperty("--ls", `${rowConfig.ls}em`);
 
   // Same "leading trim" technique as AllCaps' own tester (found via their
@@ -478,6 +510,52 @@ function buildSpecimenRow(section, rowConfig) {
     text.style.setProperty("--trim-bottom", `${overshoot}px`);
   }
 
+  // responsiveFs()'s clamp() scales font-size against viewport width, and
+  // --side-pad scales the row's own available width — but the two follow
+  // different curves (different reference points, floors and ceilings), so
+  // they don't track each other in exact lockstep at every viewport width.
+  // For a hand-picked, fixed-px row (autoFit: false) that gap can still let
+  // a word get force-split by word-break: break-word on the very first
+  // render. This measures the *actual* rendered layout after the clamp()
+  // has been applied and, only if something doesn't fit, shrinks further
+  // from there — it never grows past the requested design size, so the
+  // result stays as close to the original proportions as the available
+  // width allows.
+  function enforceNoBreak() {
+    const lhRatio = rowConfig.lh / rowConfig.fs;
+    const canvas = relayout._canvas || (relayout._canvas = document.createElement("canvas"));
+    const ctx = canvas.getContext("2d");
+
+    function fits() {
+      const rowWidth = row.getBoundingClientRect().width;
+      if (!rowWidth) return true;
+      if (rowConfig.wrapOk) {
+        // paragraph rows are meant to wrap between words across several
+        // lines — the only failure to guard against is a single word
+        // itself being wider than the row, forcing it to split mid-word.
+        ctx.font = `${getComputedStyle(text).fontSize} Camerino`;
+        const longestWord = rowConfig.text
+          .split(/\s+/)
+          .reduce((max, w) => Math.max(max, ctx.measureText(w).width), 0);
+        return longestWord <= rowWidth;
+      }
+      return measureTextLines(text).lines <= (rowConfig.maxLines || 1);
+    }
+
+    if (fits()) return;
+    let fittedFs = parseFloat(getComputedStyle(text).fontSize);
+    // setRawValue (not setValue) — a long single-line row squeezed into a
+    // narrow phone width can genuinely need to go below the sliders' own
+    // 20px UI floor; setValue would clamp back up to 20px and the loop
+    // would never converge. A higher guard count than the auto-fit rows
+    // use gives a long sentence enough shrink steps to actually reach fit.
+    for (let guard = 0; guard < 60 && !fits(); guard++) {
+      fittedFs = Math.round(fittedFs * 10 * 0.94) / 10;
+      sliders.fs.setRawValue(fittedFs);
+      sliders.lh.setRawValue(Math.round(fittedFs * lhRatio * 10) / 10);
+    }
+  }
+
   const sliders = {};
   SPECIMEN_SLIDERS.forEach((spec) => {
     const slider = buildSlider(spec, rowConfig, text, relayout);
@@ -491,6 +569,40 @@ function buildSpecimenRow(section, rowConfig) {
   row.appendChild(adjuster);
   row.appendChild(crop);
   section.appendChild(row);
+
+  // Camerino (and the site's other fonts) have no Latin glyphs, so typing
+  // or pasting English by mistake would silently fall back to the browser's
+  // default font mid-word. Strip Latin letters from whatever's about to be
+  // inserted instead — for a single keystroke that just blocks it; for a
+  // paste, the non-English part of the pasted text still goes through.
+  text.addEventListener("beforeinput", (e) => {
+    if (typeof e.data !== "string") return;
+    const cleaned = e.data.replace(/[A-Za-z]/g, "");
+    if (cleaned === e.data) return;
+    e.preventDefault();
+    if (cleaned) document.execCommand("insertText", false, cleaned);
+  });
+
+  // Deleting a row all the way down to zero characters leaves the box with
+  // no child nodes at all — nothing for the caret to anchor to. It still
+  // shows as focused, but the very next keystroke silently fails to insert.
+  // Blocking the last character's deletion "solves" that but isn't real —
+  // it makes typing a genuinely new word impossible, since a leftover
+  // character always remains.
+  //
+  // A fix on "input" (patch it back up right after each keystroke) loses a
+  // race under fast repeated backspaces (confirmed directly: dispatching a
+  // burst of backspace presses back-to-back reliably outran it, ending up
+  // empty anyway) — each keystroke's own "input" handler runs to completion
+  // before the next native delete is processed, but not fast enough to
+  // beat several in a row. MutationObserver instead settles *after* a whole
+  // burst of changes, independent of how many happened or how fast —
+  // exactly what "reliably empty, no matter how it got that way" needs.
+  new MutationObserver(() => {
+    if (text.childNodes.length === 0) {
+      text.appendChild(document.createElement("br"));
+    }
+  }).observe(text, { childList: true });
 
   text.addEventListener("input", relayout);
   window.addEventListener("resize", relayout);
@@ -528,6 +640,8 @@ function buildSpecimenRow(section, rowConfig) {
           fittedFs = Math.round(fittedFs * 0.94);
         }
       }
+    } else {
+      enforceNoBreak();
     }
     relayout();
     text.style.transition = "opacity 0.25s ease";
@@ -605,17 +719,39 @@ function buildSlider(spec, rowConfig, text, onChange) {
 
   const clamp01 = (n) => Math.min(1, Math.max(0, n));
 
-  function apply(ratio) {
+  // skipStyle lets the slider display the right position/value without
+  // touching the actual CSS custom property — used only for the initial
+  // sync below, so a row using the responsive clamp() (see responsiveFs)
+  // isn't immediately overwritten with a plain resolved px number before
+  // the visitor ever touches the slider.
+  function apply(ratio, { skipStyle = false } = {}) {
     const raw = spec.min + ratio * (spec.max - spec.min);
     const rounded = spec.cssUnit === "px" ? Math.round(raw) : Math.round(raw * 100) / 100;
     fill.style.width = `${ratio * 100}%`;
     handle.style.right = `${ratio * 100}%`;
     value.textContent = spec.format(rounded);
-    text.style.setProperty(`--${spec.prop}`, `${rounded}${spec.cssUnit}`);
+    if (!skipStyle) {
+      text.style.setProperty(`--${spec.prop}`, `${rounded}${spec.cssUnit}`);
+    }
   }
 
   function setValue(rawValue) {
     apply(clamp01((rawValue - spec.min) / (spec.max - spec.min)));
+  }
+
+  // Same as setValue, but applies the exact raw value to the CSS custom
+  // property with no clamping to spec.min/max — the slider UI's own 20px
+  // floor is a sensible range for manual dragging, but enforceNoBreak's
+  // shrink-to-fit guard needs to be able to go smaller than that on a very
+  // narrow screen for a row that must stay on one line edge-to-edge. The
+  // slider handle's own position still clamps visually (cosmetic only).
+  function setRawValue(rawValue) {
+    const rounded = spec.cssUnit === "px" ? Math.round(rawValue) : Math.round(rawValue * 100) / 100;
+    text.style.setProperty(`--${spec.prop}`, `${rounded}${spec.cssUnit}`);
+    const ratio = clamp01((rawValue - spec.min) / (spec.max - spec.min));
+    fill.style.width = `${ratio * 100}%`;
+    handle.style.right = `${ratio * 100}%`;
+    value.textContent = spec.format(rounded);
   }
 
   // fill grows from the right edge of the track outward (matches the source SVG,
@@ -626,7 +762,8 @@ function buildSlider(spec, rowConfig, text, onChange) {
   }
 
   const initialRatio = clamp01((rowConfig[spec.prop] - spec.min) / (spec.max - spec.min));
-  apply(initialRatio);
+  const preserveResponsive = rowConfig.autoFit === false && (spec.prop === "fs" || spec.prop === "lh");
+  apply(initialRatio, { skipStyle: preserveResponsive });
 
   let dragging = false;
   el.addEventListener("pointerdown", (e) => {
@@ -644,7 +781,7 @@ function buildSlider(spec, rowConfig, text, onChange) {
     dragging = false;
   });
 
-  return { el: group, setValue };
+  return { el: group, setValue, setRawValue };
 }
 
 // Built (not hand-picked) to match the reference macOS-style swatch grid one
@@ -816,17 +953,18 @@ const STORY_CREATURES = [
   },
 ].map((c) => ({ ...c, fs: 26, ls: 0, fitWidth: 0.94, maxLines: 40 }));
 
-// Exact values set by hand (not auto-fit): fs 134 / lh 121 / centered.
+// Exact values set by hand (not auto-fit): fs 140 / lh 121 / centered.
 const GIANT_PARAGRAPH_ROW = {
   text:
     "המחזור נוצר מעור מעובד, צבעי טמפרה וזהב. עבודת הכתיבה והציור דרשה זמן רב, דיוק ואמצעים. " +
     "עמוד אחר עמוד עבר מידי סופר ומידי אמנים. פאר הספר שיקף מעמד, עושר ואהבת אמנות. " +
     "הוא נשמר כחפץ קודש וכזיכרון משפחתי מדור דור.",
-  fs: 134,
+  fs: 140,
   lh: 121,
   ls: 0,
   align: "center",
   autoFit: false,
+  wrapOk: true,
 };
 STORY_CREATURES.forEach((c) => (c.lh = Math.round(c.fs * 1.5)));
 
@@ -1261,6 +1399,11 @@ function initCharmap() {
   }
 
   window.addEventListener("resize", () => {
+    // stage's own left padding now switches value across the mobile
+    // stacked-layout breakpoint (fixed 10px side-by-side vs. var(--side-pad)
+    // stacked) — re-read it so the guides stay aligned with the canvas ink
+    // if a resize/rotation crosses that breakpoint.
+    stagePadLeft = parseFloat(getComputedStyle(stage).paddingLeft);
     const active = section.querySelector(".charmap__item.is-active");
     if (!active) return;
     if (active.dataset.feature) {

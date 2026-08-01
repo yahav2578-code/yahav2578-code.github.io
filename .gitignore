@@ -7,6 +7,13 @@
 /raw-assets/
 /*.psd
 
+# Raw sketch/reference material for the research page — the finished,
+# resized images actually served live under assets/img/research/ instead
+/עמוד מחקר/
+/סקיצה אתר מחקר.ai
+/סקיצה אתר מחקר.pdf
+/ק.pdf
+
 # Source videos — frames already extracted into assets/frames/
 /for b.mp4
 /for c.mp4
@@ -24,6 +31,8 @@
 /galgal mzal 2.svg
 /NarkissBlock-Regular-TRIAL.otf
 /ptiha.png
+/ptiha2.png
+/ptiha mehkar.png
 /rezoa 1 2.png
 /rezoa 1 y.png
 /rezoa 2 s.png

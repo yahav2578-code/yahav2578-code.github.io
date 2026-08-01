@@ -4,142 +4,332 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>מחקר הכתב והאותיות — קמרינו</title>
-<link rel="stylesheet" href="css/style.css?v=18">
-<link rel="stylesheet" href="css/research.css?v=4">
+<link rel="stylesheet" href="css/style.css?v=59">
+<link rel="stylesheet" href="css/research.css?v=24">
 </head>
 <body class="research">
 
 <a class="research__close" href="index.html" aria-label="חזרה לעמוד הבית">✕</a>
+<div class="lang-switch" role="group" aria-label="Switch language">
+  <button type="button" class="lang-switch__btn is-active" data-lang="he">עב</button>
+  <button type="button" class="lang-switch__btn" data-lang="en">EN</button>
+  <button type="button" class="lang-switch__btn" data-lang="it">IT</button>
+</div>
 
 <section class="rs-section rs-hero" id="researchHero">
   <div class="hero__grid" id="researchHeroGrid" data-svg="assets/svg/grid-research.svg" aria-hidden="true"></div>
   <div class="hero__grid-fade"></div>
+  <img class="hero__creatures" src="assets/img/ptiha-mehkar.png" alt="" aria-hidden="true">
   <div class="rs-hero__content">
-    <h1 class="rs-hero__title">קמרינו חצי קורסיבי</h1>
-    <p class="rs-hero__subtitle">מחקר הכתב והאותיות</p>
+    <h1 class="rs-hero__title"><span class="lang-he">קמרינו חצי קורסיבי</span><span class="lang-en">Camerino Semi-Cursive</span><span class="lang-it">Camerino Semicorsivo</span></h1>
+    <p class="rs-hero__subtitle"><span class="lang-he">מחקר הכתב והאותיות</span><span class="lang-en">A Study of the Script and Letterforms</span><span class="lang-it">Uno studio della scrittura e delle lettere</span></p>
   </div>
   <div class="rs-hero__scroll">
-    <span>לגלול</span>
+    <span><span class="lang-he">לגלול</span><span class="lang-en">Scroll</span><span class="lang-it">Scorri</span></span>
     <span class="rs-hero__arrow" aria-hidden="true"></span>
   </div>
 </section>
 
-<section class="rs-section rs-chapter rs-chapter--split" data-reveal>
-  <h2 class="rs-chapter__title">התפתחות הכתב<br>החצי קורסיבי</h2>
-  <div class="rs-chapter__block rs-chapter__block--a">
-    <img class="rs-chapter__img rs-chapter__img--sm" src="assets/img/research/strip-2-y.png" alt="" loading="lazy">
-    <p class="rs-chapter__text">במהלך המאה השלוש עשרה החלו להתגבש באירופה שלוש מסורות כתיבה עבריות מרכזיות, אשכנזית, ספרדית ואיטלקית. באיטליה התפתח כתב רהוט וגמיש ששימש להעתקת פירושים, ספרי הלכה, הוראות וספרי תפילה, ונודע בשם כתב חצי קורסיבי איטלקי.</p>
-  </div>
-  <div class="rs-chapter__block rs-chapter__block--b">
-    <p class="rs-chapter__text">בניגוד לכתב המרובע, שהיה יציב וטקסי, הכתב החצי קורסיבי אפשר תנועה מהירה וחופשית יותר. האותיות קיבלו קימורים רכים, פתחים רחבים וזרימה אורגנית. למרות מראהו החופשי, זהו כתב מקצועי ומגובש, בעל כללים ברורים ומסורת שנשמרה בידי סופרים מיומנים.</p>
-    <img class="rs-chapter__img rs-chapter__img--lg" src="assets/img/research/strip-2-s.png" alt="" loading="lazy">
-  </div>
-</section>
-
-<section class="rs-section rs-chapter" data-reveal>
-  <h2 class="rs-chapter__title">מחזור רוטשילד</h2>
+<!-- קומה 1 -->
+<section class="rs-section rs-chapter">
+  <h2 class="rs-chapter__title"><span class="lang-he">התפתחות הכתב<br>החצי קורסיבי</span><span class="lang-en">The Development of the<br>Semi-Cursive Script</span><span class="lang-it">Lo sviluppo della<br>scrittura semicorsiva</span></h2>
   <div class="rs-chapter__body">
-    <div class="rs-chapter__text">
-      <p>מחזור רוטשילד הוא אחד מכתבי היד העבריים המפוארים ביותר ששרדו מתקופת הרנסאנס האיטלקי. הוא נכתב בפירנצה בידי אברהם יהודה בן יחיאל מקמרינו, והושלם בחמישה עשר בפברואר אלף ארבע מאות תשעים. המחזור אינו רק ספר תפילה.</p>
-      <p>הוא משמש ספרייה משפחתית שלמה בכרך אחד, ובה תפילות, פיוטים, הלכות, עצות רפואיות, חוזים, חישובי לוח שנה וידע מעשי. כך הוא מעניק הצצה נדירה לחיי משפחה יהודית אמידה באיטליה של הרנסאנס.</p>
-    </div>
-    <div class="rs-chapter__media">
-      <img src="assets/img/research/strip-3-y.svg" alt="" loading="lazy">
-      <img src="assets/img/research/strip-3-s.svg" alt="" loading="lazy">
-    </div>
-  </div>
-</section>
-
-<section class="rs-section rs-chapter" data-reveal>
-  <h2 class="rs-chapter__title">על האותיות<br>וצורת הכתב</h2>
-  <div class="rs-chapter__body">
-    <div class="rs-chapter__text">
-      <p>האותיות במחזור נכתבו בכתב חצי קורסיבי איטלקי עגול. הקווים מתעגלים, נפתחים וממשיכים זה אל זה, והכתב כולו נראה כאילו הוא צומח ונע על פני הקלף.</p>
-      <p>הסופר השתמש בגדלים שונים כדי לבנות היררכיה. אותיות קטנות שימשו להוראות, בינוניות לתפילה, וגדולות לפיוטים ולמילות פתיחה. כאשר נותר חלל ריק, הוא סידר את המילים בתבניות מופשטות והפך את הטקסט לחלק מן העיצוב.</p>
-    </div>
-    <div class="rs-chapter__media rs-chapter__media--three">
-      <img src="assets/img/research/strip-4-y.png" alt="" loading="lazy">
-      <img src="assets/img/research/strip-4-s.png" alt="" loading="lazy">
-      <img src="assets/img/research/strip-4-m.png" alt="" loading="lazy">
-    </div>
-  </div>
-</section>
-
-<section class="rs-section rs-chapter" data-reveal>
-  <h2 class="rs-chapter__title">הגריד והאדריכלות<br>של העמוד</h2>
-  <div class="rs-chapter__body">
-    <div class="rs-chapter__text">
-      <p>סביב מילות הפתיחה הושארו מראש חללים רחבים שנועדו לעיטור. החלל הריק לא היה מקרי, אלא חלק מן התכנון. הוא קבע את היחסים בין האות, התמונה והמסגרת.</p>
-    </div>
-    <div class="rs-chapter__media">
-      <img src="assets/img/research/strip-5-y.png" alt="" loading="lazy">
-      <img src="assets/img/research/strip-5-s.png" alt="" loading="lazy">
-    </div>
-  </div>
-</section>
-
-<section class="rs-section rs-chapter" data-reveal>
-  <h2 class="rs-chapter__title">האיורים והסדנאות</h2>
-  <div class="rs-chapter__body">
-    <div class="rs-chapter__text">
-      <p>לאחר השלמת הכתיבה עברו דפי הקלף לסדנאות של אמנים נוצרים בפירנצה. הם הוסיפו צבעי מים, טמפרה, עלי זהב, מסגרות פרחוניות ודמויות מלאות תנועה.</p>
-    </div>
-    <div class="rs-chapter__media rs-chapter__media--three">
-      <img src="assets/img/research/strip-6-y.png" alt="" loading="lazy">
-      <img src="assets/img/research/strip-6-s.png" alt="" loading="lazy">
-      <img src="assets/img/research/strip-6-m.png" alt="" loading="lazy">
-    </div>
-  </div>
-</section>
-
-<section class="rs-section rs-chapter" data-reveal>
-  <h2 class="rs-chapter__title">תהליך השחזור<br>והפרשנות העכשווית</h2>
-  <div class="rs-chapter__body rs-chapter__body--text-only">
-    <div class="rs-chapter__text">
-      <p>המחקר מזהה שלוש קבוצות עבודה. סדנה אחת התמקדה בקישוט ולא תמיד הבינה את הטקסט. סדנה אחרת תיארה מנהגים יהודיים בדייקנות. הסדנה היוקרתית ביותר השתמשה בטמפרה ובזהב ויצרה דמויות בעלות נפח ועומק בסגנון הרנסאנס הפלורנטיני.</p>
-    </div>
-  </div>
-</section>
-
-<section class="rs-section rs-chapter" data-reveal>
-  <h2 class="rs-chapter__title">שיתוף הפעולה בין<br>הסופר למאיירים</h2>
-  <div class="rs-chapter__body">
-    <div class="rs-chapter__text">
-      <p>לא שרדו עדויות למפגש ישיר בין הסופר למאיירים, אך העמודים עצמם מעידים על תכנון מוקדם. אברהם יהודה השאיר חללים מדויקים לעיטור, והאמנים פעלו בתוך המבנה שקבע.</p>
-      <p>במקומות מסוימים העיטור מגיב ישירות לצורת הטקסט, מקיף אותו בזהב ובצמחייה ומדגיש את גבולותיו. כך נוצר דיאלוג חזותי בין הכתב העברי לבין האמנות הפלורנטינית.</p>
-    </div>
     <div class="rs-chapter__media rs-chapter__media--single">
-      <img src="assets/img/research/strip-8-y.png" alt="" loading="lazy">
+      <img src="assets/img/research/floor1.png" alt="" loading="eager">
+    </div>
+    <div class="rs-chapter__text">
+      <p><span class="lang-he">במהלך המאה השלוש עשרה החלו להתגבש באירופה שלוש מסורות כתיבה עבריות מרכזיות, אשכנזית, ספרדית ואיטלקית. באיטליה התפתח כתב רהוט וגמיש ששימש להעתקת פירושים, ספרי הלכה, הוראות וספרי תפילה, ונודע בשם כתב חצי קורסיבי איטלקי.</span><span class="lang-en">During the thirteenth century, three major Hebrew scribal traditions began to take shape across Europe: Ashkenazi, Sephardi, and Italian. In Italy, a fluent and flexible script developed for copying commentaries, halakhic texts, instructional works, and prayer books — known as the Italian semi-cursive script.</span><span class="lang-it">Nel corso del tredicesimo secolo, in Europa cominciarono a delinearsi tre grandi tradizioni scribali ebraiche: ashkenazita, sefardita e italiana. In Italia si sviluppò una scrittura scorrevole e flessibile, usata per copiare commentari, testi halakhici, opere didattiche e libri di preghiera — nota come scrittura semicorsiva italiana.</span></p>
+      <p><span class="lang-he">בניגוד לכתב המרובע, שהיה יציב וטקסי, הכתב החצי קורסיבי אפשר תנועה מהירה וחופשית יותר. האותיות קיבלו קימורים רכים, פתחים רחבים וזרימה אורגנית. למרות מראהו החופשי, זהו כתב מקצועי ומגובש, בעל כללים ברורים ומסורת שנשמרה בידי סופרים מיומנים.</span><span class="lang-en">Unlike the square script, which was formal and ceremonial, the semi-cursive allowed for faster, freer movement of the hand. Its letters took on soft curves, wide openings, and an organic flow. Despite its loose appearance, it remained a professional, well-defined script, governed by clear rules and a tradition upheld by skilled scribes.</span><span class="lang-it">A differenza della scrittura quadrata, formale e cerimoniale, la semicorsiva permetteva un movimento della mano più rapido e libero. Le sue lettere assunsero curve morbide, aperture ampie e un flusso organico. Nonostante l'aspetto libero, restava una scrittura professionale e ben definita, governata da regole chiare e da una tradizione tramandata da scribi esperti.</span></p>
     </div>
   </div>
 </section>
 
-<section class="rs-section rs-chapter" data-reveal>
-  <h2 class="rs-chapter__title">מסע הבעלות<br>והמורשת</h2>
-  <div class="rs-chapter__body rs-chapter__body--text-only">
-    <div class="rs-chapter__text">
-      <p>המחזור הוזמן עבור משפחת גאליקו ובהמשך עבר ככל הנראה למשפחת נורסה כמתנת נישואים. סמלי שתי המשפחות שולבו בעיטורים והפכו את הספר גם לחפץ משפחתי ולסמל מעמד.</p>
-      <p>מאות שנים לאחר מכן הגיע כתב היד למשפחת רוטשילד. לאחר שעבר בין בני המשפחה ונשדד בזמן מלחמת העולם השנייה, הוא הוחזר לבעליו. בשנת אלף תשע מאות שישים ושש נתרם לספריית בית המדרש לרבנים באמריקה בניו יורק, שם הוא שמור כיום.</p>
+<!-- קומה 2 -->
+<section class="rs-section rs-chapter">
+  <h2 class="rs-chapter__title"><span class="lang-he">מחזור רוטשילד</span><span class="lang-en">The Rothschild Mahzor</span><span class="lang-it">Il Machazor Rothschild</span></h2>
+  <div class="rs-marquee">
+    <div class="rs-marquee__track">
+      <img src="assets/img/research/floor2/img-01.png" alt="" loading="eager">
+      <img src="assets/img/research/floor2/img-02.png" alt="" loading="eager">
+      <img src="assets/img/research/floor2/img-03.png" alt="" loading="eager">
+      <img src="assets/img/research/floor2/img-04.png" alt="" loading="eager">
+      <img src="assets/img/research/floor2/img-05.png" alt="" loading="eager">
+      <img src="assets/img/research/floor2/img-06.png" alt="" loading="eager">
+      <img src="assets/img/research/floor2/img-07.png" alt="" loading="eager">
+      <img src="assets/img/research/floor2/img-08.png" alt="" loading="eager">
+      <img src="assets/img/research/floor2/img-09.png" alt="" loading="eager">
+      <img src="assets/img/research/floor2/img-10.png" alt="" loading="eager">
+      <img src="assets/img/research/floor2/img-11.png" alt="" loading="eager">
+      <img src="assets/img/research/floor2/img-12.png" alt="" loading="eager">
+      <!-- same set repeated once more, back to back — the CSS animation
+           moves exactly 50% (one full set) before looping, so the seam
+           between the two copies is what makes the loop seamless -->
+      <img src="assets/img/research/floor2/img-01.png" alt="" loading="eager">
+      <img src="assets/img/research/floor2/img-02.png" alt="" loading="eager">
+      <img src="assets/img/research/floor2/img-03.png" alt="" loading="eager">
+      <img src="assets/img/research/floor2/img-04.png" alt="" loading="eager">
+      <img src="assets/img/research/floor2/img-05.png" alt="" loading="eager">
+      <img src="assets/img/research/floor2/img-06.png" alt="" loading="eager">
+      <img src="assets/img/research/floor2/img-07.png" alt="" loading="eager">
+      <img src="assets/img/research/floor2/img-08.png" alt="" loading="eager">
+      <img src="assets/img/research/floor2/img-09.png" alt="" loading="eager">
+      <img src="assets/img/research/floor2/img-10.png" alt="" loading="eager">
+      <img src="assets/img/research/floor2/img-11.png" alt="" loading="eager">
+      <img src="assets/img/research/floor2/img-12.png" alt="" loading="eager">
     </div>
+  </div>
+  <div class="rs-chapter__text rs-chapter__text--wide">
+    <p><span class="lang-he">מחזור רוטשילד (JTS Ms. 8892) הוא אחד מכתבי היד העבריים המפוארים ביותר ששרדו מתקופת הרנסאנס האיטלקי. הוא נכתב בפירנצה בידי אברהם יהודה בן יחיאל מקמרינו, והושלם בחמישה עשר בפברואר אלף ארבע מאות תשעים. המחזור משמש ספרייה משפחתית שלמה בכרך אחד, ובה תפילות, פיוטים, הלכות, עצות רפואיות, חוזים, חישובי לוח שנה וידע מעשי. כך הוא מעניק הצצה נדירה לחיי משפחה יהודית אמידה באיטליה של הרנסאנס.</span><span class="lang-en">The Rothschild Mahzor (JTS Ms. 8892) is one of the most magnificent Hebrew manuscripts to survive from the Italian Renaissance. It was written in Florence by Abraham Judah ben Yehiel of Camerino, and completed on February 15, 1490. The mahzor serves as an entire family library in a single volume, containing prayers, liturgical poems, halakhic rulings, medical advice, contracts, calendar calculations, and practical knowledge — offering a rare glimpse into the life of a well-to-do Jewish family in Renaissance Italy.</span><span class="lang-it">Il Machazor Rothschild (JTS Ms. 8892) è uno dei manoscritti ebraici più sontuosi sopravvissuti dal Rinascimento italiano. Fu scritto a Firenze da Abramo Yehuda ben Yechiel da Camerino, e completato il quindici febbraio millequattrocentonovanta. Il machazor funge da intera biblioteca familiare in un unico volume, contenente preghiere, poemi liturgici, norme halakhiche, consigli medici, contratti, calcoli calendariali e conoscenze pratiche — offrendo uno sguardo raro sulla vita di una famiglia ebraica agiata nell'Italia rinascimentale.</span></p>
+  </div>
+</section>
+
+<!-- קומה 3 -->
+<section class="rs-section rs-chapter">
+  <h2 class="rs-chapter__title"><span class="lang-he">על האותיות<br>וצורת הכתב</span><span class="lang-en">On the Letters<br>and the Form of the Script</span><span class="lang-it">Sulle lettere<br>e la forma della scrittura</span></h2>
+  <div class="rs-marquee">
+    <div class="rs-marquee__track">
+      <img src="assets/img/research/floor3/img-01.png" alt="" loading="eager">
+      <img src="assets/img/research/floor3/img-02.png" alt="" loading="eager">
+      <img src="assets/img/research/floor3/img-03.png" alt="" loading="eager">
+      <img src="assets/img/research/floor3/img-04.png" alt="" loading="eager">
+      <img src="assets/img/research/floor3/img-05.png" alt="" loading="eager">
+      <img src="assets/img/research/floor3/img-06.png" alt="" loading="eager">
+      <img src="assets/img/research/floor3/img-07.png" alt="" loading="eager">
+      <img src="assets/img/research/floor3/img-08.png" alt="" loading="eager">
+      <img src="assets/img/research/floor3/img-09.png" alt="" loading="eager">
+      <!-- same set repeated once more, back to back — required for the
+           seamless loop (see .rs-marquee in research.css) -->
+      <img src="assets/img/research/floor3/img-01.png" alt="" loading="eager">
+      <img src="assets/img/research/floor3/img-02.png" alt="" loading="eager">
+      <img src="assets/img/research/floor3/img-03.png" alt="" loading="eager">
+      <img src="assets/img/research/floor3/img-04.png" alt="" loading="eager">
+      <img src="assets/img/research/floor3/img-05.png" alt="" loading="eager">
+      <img src="assets/img/research/floor3/img-06.png" alt="" loading="eager">
+      <img src="assets/img/research/floor3/img-07.png" alt="" loading="eager">
+      <img src="assets/img/research/floor3/img-08.png" alt="" loading="eager">
+      <img src="assets/img/research/floor3/img-09.png" alt="" loading="eager">
+    </div>
+  </div>
+  <div class="rs-chapter__text rs-chapter__text--wide">
+    <p><span class="lang-he">האותיות במחזור רוטשילד נכתבו בכתב חצי קורסיבי איטלקי , שהשפעתו נקשרת מהכתב הלטיני הקרולינגי. בהשוואה לכתב<br>המרובע הפורמלי, צורות האות רכות וגמישות יותר, בעלות קימורים מודגשים, קצב קליגרפי ותנועה אורגנית על פני הקלף.<br>אברהם יהודה מקמרינו ניצל את גמישות הכתב כדי ליצור היררכיה ברורה באמצעות גדלים משתנים, מאותיות קטנות<br>להוראות ועד אותיות גדולות לפיוטים ולמילות פתיחה. המבנה הזורם אפשר לו גם לחרוג מסדר השורות הקבוע<br>ולעצב מילים שלמות בתבניות גיאומטריות מופשטות, ששימשו למילוי חללים<br>והפכו את הטקסט לחלק פעיל מן הקומפוזיציה.</span><span class="lang-en">The letters of the Rothschild Mahzor were written in the Italian semi-cursive script, whose influence traces back to the Carolingian Latin hand. Compared to the formal square script, its letterforms are softer and more flexible, with pronounced curves, a calligraphic rhythm, and organic movement across the parchment. Abraham Judah of Camerino used this flexibility to create a clear hierarchy through varying sizes — from small letters for instructions to large letters for liturgical poems and opening words. The flowing structure also let him break from the fixed line order and shape whole words into abstract geometric patterns, used to fill empty spaces and turning the text into an active part of the composition.</span><span class="lang-it">Le lettere del Machazor Rothschild furono scritte nella scrittura semicorsiva italiana, la cui influenza risale alla scrittura latina carolingia. Rispetto alla scrittura quadrata formale, le sue forme sono più morbide e flessibili, con curve pronunciate, un ritmo calligrafico e un movimento organico sulla pergamena. Abramo Yehuda da Camerino sfruttò questa flessibilità per creare una chiara gerarchia attraverso dimensioni variabili — da lettere piccole per le istruzioni a lettere grandi per i poemi liturgici e le parole di apertura. La struttura fluida gli permise anche di allontanarsi dall'ordine fisso delle righe e di comporre intere parole in motivi geometrici astratti, usati per riempire gli spazi vuoti e trasformare il testo in una parte attiva della composizione.</span></p>
+  </div>
+</section>
+
+<!-- קומה 4 -->
+<section class="rs-section rs-chapter">
+  <h2 class="rs-chapter__title"><span class="lang-he">תהליך עיצוב<br>האותיות</span><span class="lang-en">The Letter<br>Design Process</span><span class="lang-it">Il processo di<br>progettazione delle lettere</span></h2>
+  <div class="rs-chapter__text rs-chapter__text--wide">
+    <p><span class="lang-he">זהו עיצוב גופן המבוסס על הכתב החצי קורסיבי האיטלקי שבו כתב אברהם יהודה בן יחיאל מקמרינו את מחזור רוטשילד<br>בפירנצה בשנת אלף ארבע מאות תשעים. צורת הכתב משקפת את הסביבה החזותית של הרנסאנס ואת ההשפעה<br>ההומניסטית של התקופה, הניכרת בעגלגלות, באיזון ובתנועה האורגנית של האותיות. תהליך העיצוב<br>שומר על המבנה, הקצב והקונטרסט של המקור, ובו בזמן מתמודד עם הצורך להפוך<br>כתב יד משתנה למערכת טיפוגרפית אחידה, קריאה ועקבית.</span><span class="lang-en">This typeface is based on the Italian semi-cursive script in which Abraham Judah ben Yehiel of Camerino wrote the Rothschild Mahzor in Florence in 1490. The form of the script reflects the visual environment of the Renaissance and the humanist influence of the period, evident in the roundness, balance, and organic movement of its letters. The design process preserves the structure, rhythm, and contrast of the original, while at the same time meeting the need to turn a variable handwriting into a typographic system that is uniform, legible, and consistent.</span><span class="lang-it">Questo carattere tipografico si basa sulla scrittura semicorsiva italiana con cui Abramo Yehuda ben Yechiel da Camerino scrisse il Machazor Rothschild a Firenze nel 1490. La forma della scrittura riflette l'ambiente visivo del Rinascimento e l'influenza umanistica dell'epoca, evidente nella rotondità, nell'equilibrio e nel movimento organico delle sue lettere. Il processo di progettazione preserva la struttura, il ritmo e il contrasto dell'originale, affrontando al contempo la necessità di trasformare una scrittura manoscritta variabile in un sistema tipografico uniforme, leggibile e coerente.</span></p>
+  </div>
+  <div class="rs-strokes">
+    <img src="assets/img/research/floor4/strokes-1.png" alt="" loading="eager">
+  </div>
+</section>
+
+<!-- קומה 5 -->
+<section class="rs-section rs-chapter">
+  <div class="rs-chapter__text rs-chapter__text--wide">
+    <p><span class="lang-he">בשלב השני, לאחר המחקר הצורני, התחלתי לבחון כיצד נכתבו האותיות בפועל. כתבתי אות כדי להבין לעומק את תנועת היד,<br>כיוון הקו והקונטרסט שנוצר בזמן הכתיבה, ולנסות לשחזר את ההיגיון הקליגרפי של המקור. בהמשך ציירתי<br>סקיצות ושלדים לאותיות, במטרה לגבש צורה ברורה ומדויקת שאותה ניתן יהיה<br>להעביר לתוכנת גליפס ולהמשיך לפתח כמערכת טיפוגרפית.</span><span class="lang-en">In the second stage, after the formal research, I began examining how the letters were actually written. I wrote them by hand to understand in depth the movement of the hand, the direction of the stroke, and the contrast created while writing, and to try to reconstruct the calligraphic logic of the original. I then drew sketches and skeletons for the letters, aiming to arrive at a clear, precise form that could be brought into Glyphs and further developed as a typographic system.</span><span class="lang-it">Nella seconda fase, dopo la ricerca formale, ho iniziato a esaminare come venivano effettivamente scritte le lettere. Le ho scritte a mano per comprendere a fondo il movimento della mano, la direzione del tratto e il contrasto creato durante la scrittura, e per cercare di ricostruire la logica calligrafica dell'originale. In seguito ho disegnato schizzi e scheletri delle lettere, con l'obiettivo di arrivare a una forma chiara e precisa che potesse essere trasferita in Glyphs e ulteriormente sviluppata come sistema tipografico.</span></p>
+  </div>
+  <div class="rs-marquee">
+    <div class="rs-marquee__track">
+      <img src="assets/img/research/floor5/img-01.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-02.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-03.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-04.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-05.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-06.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-07.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-08.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-09.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-10.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-11.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-12.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-13.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-14.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-15.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-16.jpg" alt="" loading="eager">
+      <!-- same set repeated once more, back to back — required for the
+           seamless loop (see .rs-marquee in research.css) -->
+      <img src="assets/img/research/floor5/img-01.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-02.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-03.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-04.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-05.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-06.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-07.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-08.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-09.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-10.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-11.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-12.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-13.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-14.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-15.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor5/img-16.jpg" alt="" loading="eager">
+    </div>
+  </div>
+  <div class="rs-chapter__text rs-chapter__text--wide">
+    <p><span class="lang-he">בשלב השלישי הועברו הסקיצות לסביבת העבודה של גליפס, שם תורגמו ממחוות קליגרפיות למערכת טיפוגרפית סדורה.<br>התהליך כלל זיקוק של הפרופורציות, הקונטרסט, המרווחים והיחסים הפנימיים בין האותיות, תוך שימור המתח<br>שבין האופי האורגני של הכתב לבין דרישותיה של מערכת עקבית ובעלת היגיון צורני משותף.</span><span class="lang-en">In the third stage, the sketches were brought into the Glyphs working environment, where they were translated from calligraphic gestures into an ordered typographic system. The process involved refining the proportions, contrast, spacing, and internal relationships between the letters, while preserving the tension between the script's organic character and the demands of a consistent system with a shared formal logic.</span><span class="lang-it">Nella terza fase, gli schizzi sono stati trasferiti nell'ambiente di lavoro di Glyphs, dove sono stati tradotti da gesti calligrafici a un sistema tipografico ordinato. Il processo ha comportato l'affinamento delle proporzioni, del contrasto, della spaziatura e delle relazioni interne tra le lettere, preservando la tensione tra il carattere organico della scrittura e le esigenze di un sistema coerente e dotato di una logica formale condivisa.</span></p>
+  </div>
+</section>
+
+<!-- קומה חדשה — חשיפת עכבר: שכבה עליונה (הגופן הסופי) מעל שכבה תחתונה
+     (המקור הכתוב-יד), מקצה לקצה. ריחוף חושף את המקור מתחת לגופן. -->
+<section class="rs-section rs-chapter">
+  <div class="rs-reveal rs-reveal--full">
+    <img class="rs-reveal__base" src="assets/img/research/floor6/top-1.png" alt="" loading="eager">
+    <img class="rs-reveal__hidden" src="assets/img/research/floor6/bottom-1.png" alt="" loading="eager">
+  </div>
+</section>
+
+<!-- קומה חדשה — הגריד והאדריכלות של העמוד -->
+<section class="rs-section rs-chapter">
+  <h2 class="rs-chapter__title"><span class="lang-he">הגריד והאדריכלות<br>של העמוד</span><span class="lang-en">The Grid and Architecture<br>of the Page</span><span class="lang-it">La griglia e l'architettura<br>della pagina</span></h2>
+  <div class="rs-marquee">
+    <div class="rs-marquee__track">
+      <img src="assets/img/research/floor6b/img-01.png" alt="" loading="eager">
+      <img src="assets/img/research/floor6b/img-02.png" alt="" loading="eager">
+      <img src="assets/img/research/floor6b/img-03.png" alt="" loading="eager">
+      <img src="assets/img/research/floor6b/img-04.png" alt="" loading="eager">
+      <img src="assets/img/research/floor6b/img-05.png" alt="" loading="eager">
+      <img src="assets/img/research/floor6b/img-06.png" alt="" loading="eager">
+      <img src="assets/img/research/floor6b/img-07.png" alt="" loading="eager">
+      <img src="assets/img/research/floor6b/img-08.png" alt="" loading="eager">
+      <img src="assets/img/research/floor6b/img-09.png" alt="" loading="eager">
+      <img src="assets/img/research/floor6b/img-10.png" alt="" loading="eager">
+      <img src="assets/img/research/floor6b/img-11.png" alt="" loading="eager">
+      <!-- same set repeated once more, back to back — required for the
+           seamless loop (see .rs-marquee in research.css) -->
+      <img src="assets/img/research/floor6b/img-01.png" alt="" loading="eager">
+      <img src="assets/img/research/floor6b/img-02.png" alt="" loading="eager">
+      <img src="assets/img/research/floor6b/img-03.png" alt="" loading="eager">
+      <img src="assets/img/research/floor6b/img-04.png" alt="" loading="eager">
+      <img src="assets/img/research/floor6b/img-05.png" alt="" loading="eager">
+      <img src="assets/img/research/floor6b/img-06.png" alt="" loading="eager">
+      <img src="assets/img/research/floor6b/img-07.png" alt="" loading="eager">
+      <img src="assets/img/research/floor6b/img-08.png" alt="" loading="eager">
+      <img src="assets/img/research/floor6b/img-09.png" alt="" loading="eager">
+      <img src="assets/img/research/floor6b/img-10.png" alt="" loading="eager">
+      <img src="assets/img/research/floor6b/img-11.png" alt="" loading="eager">
+    </div>
+  </div>
+  <div class="rs-chapter__text rs-chapter__text--wide">
+    <p><span class="lang-he">הגריד במחזור רוטשילד מציג שימוש מתוחכם בטקסט צורני, שבו סידור המילים חורג מן<br>המבנה המלבני המקובל והופך למרכיב חזותי פעיל. תופעה זו מזוהה עם מסורת הקארמינה<br>פיגוראטה, אך במקרה זה אין מדובר ביצירת דימויים פיגורטיביים, אלא בתבניות גיאומטריות<br>מופשטות פתרון זה אינו רק אמצעי למילוי חלל עימודי, אלא מערכת ארכיטקטונית של ממש,<br>שסביבה נבנו בהמשך מסגרות זהב, עיטורים צמחיים וקומפוזיציות מאוירות.</span><span class="lang-en">The grid in the Rothschild Mahzor shows a sophisticated use of shaped text, in which the arrangement of words departs from the conventional rectangular block and becomes an active visual element. This phenomenon is linked to the tradition of carmina figurata, though here it does not form figurative images but abstract geometric patterns. This solution is not merely a way of filling empty layout space, but a genuine architectural system, around which gold frames, floral ornaments, and illuminated compositions were later built.</span><span class="lang-it">La griglia del Machazor Rothschild mostra un uso sofisticato del testo figurato, in cui la disposizione delle parole si allontana dal blocco rettangolare convenzionale e diventa un elemento visivo attivo. Questo fenomeno è legato alla tradizione della carmina figurata, sebbene qui non si tratti di creare immagini figurative, bensì motivi geometrici astratti. Questa soluzione non è soltanto un modo per riempire lo spazio impaginativo vuoto, ma un vero e proprio sistema architettonico, attorno al quale furono poi costruite cornici dorate, ornamenti floreali e composizioni miniate.</span></p>
+  </div>
+</section>
+
+<!-- קומה 7 — האיורים והסדנאות -->
+<section class="rs-section rs-chapter">
+  <h2 class="rs-chapter__title"><span class="lang-he">האיורים<br>והסדנאות</span><span class="lang-en">The Illustrations<br>and the Workshops</span><span class="lang-it">Le illustrazioni<br>e le botteghe</span></h2>
+  <div class="rs-marquee">
+    <div class="rs-marquee__track">
+      <img src="assets/img/research/floor7/img-01.png" alt="" loading="eager">
+      <img src="assets/img/research/floor7/img-02.png" alt="" loading="eager">
+      <img src="assets/img/research/floor7/img-03.png" alt="" loading="eager">
+      <img src="assets/img/research/floor7/img-04.png" alt="" loading="eager">
+      <img src="assets/img/research/floor7/img-05.png" alt="" loading="eager">
+      <img src="assets/img/research/floor7/img-06.png" alt="" loading="eager">
+      <img src="assets/img/research/floor7/img-07.png" alt="" loading="eager">
+      <img src="assets/img/research/floor7/img-08.png" alt="" loading="eager">
+      <img src="assets/img/research/floor7/img-09.png" alt="" loading="eager">
+      <!-- same set repeated once more, back to back — required for the
+           seamless loop (see .rs-marquee in research.css) -->
+      <img src="assets/img/research/floor7/img-01.png" alt="" loading="eager">
+      <img src="assets/img/research/floor7/img-02.png" alt="" loading="eager">
+      <img src="assets/img/research/floor7/img-03.png" alt="" loading="eager">
+      <img src="assets/img/research/floor7/img-04.png" alt="" loading="eager">
+      <img src="assets/img/research/floor7/img-05.png" alt="" loading="eager">
+      <img src="assets/img/research/floor7/img-06.png" alt="" loading="eager">
+      <img src="assets/img/research/floor7/img-07.png" alt="" loading="eager">
+      <img src="assets/img/research/floor7/img-08.png" alt="" loading="eager">
+      <img src="assets/img/research/floor7/img-09.png" alt="" loading="eager">
+    </div>
+  </div>
+  <div class="rs-chapter__text rs-chapter__text--wide">
+    <p><span class="lang-he">לאחר השלמת הכתיבה עברו דפי הקלף לסדנאות של אמנים נוצרים בפירנצה, שהוסיפו צבעי מים,<br>טמפרה, עלי זהב, מסגרות פרחוניות ודמויות מלאות תנועה. המחקר מזהה שלוש קבוצות עבודה<br>שונות: סדנה אחת התמקדה בעיקר בקישוט ולא תמיד הבינה את משמעות הטקסט, סדנה אחרת<br>תיארה מנהגים יהודיים בדייקנות, ואילו הסדנה היוקרתית ביותר השתמשה בטמפרה ובזהב ויצרה<br>דמויות בעלות נפח, עומק ותנועה בסגנון הרנסאנס הפלורנטיני.</span><span class="lang-en">After the writing was completed, the parchment pages passed to the workshops of Christian artists in Florence, who added watercolors, tempera, gold leaf, floral frames, and figures full of movement. The research identifies three distinct working groups: one workshop focused mainly on decoration and did not always grasp the meaning of the text, another depicted Jewish customs with precision, while the most prestigious workshop used tempera and gold to create figures with volume, depth, and movement in the style of the Florentine Renaissance.</span><span class="lang-it">Dopo il completamento della scrittura, i fogli di pergamena passarono alle botteghe di artisti cristiani a Firenze, che aggiunsero acquerelli, tempera, foglia d'oro, cornici floreali e figure piene di movimento. La ricerca individua tre gruppi di lavoro distinti: una bottega si concentrò principalmente sulla decorazione e non sempre comprese il significato del testo, un'altra raffigurò con precisione usanze ebraiche, mentre la bottega più prestigiosa utilizzò tempera e oro per creare figure dotate di volume, profondità e movimento nello stile del Rinascimento fiorentino.</span></p>
+  </div>
+</section>
+
+<!-- קומה 7 — תהליך השחזור והפרשנות העכשווית -->
+<section class="rs-section rs-chapter">
+  <h2 class="rs-chapter__title"><span class="lang-he">תהליך השחזור<br>והפרשנות העכשווית</span><span class="lang-en">The Reconstruction Process<br>and Contemporary Interpretation</span><span class="lang-it">Il processo di ricostruzione<br>e l'interpretazione contemporanea</span></h2>
+  <div class="rs-marquee">
+    <div class="rs-marquee__track">
+      <img src="assets/img/research/floor8/img-01.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor8/img-02.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor8/img-03.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor8/img-04.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor8/img-05.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor8/img-06.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor8/img-07.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor8/img-08.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor8/img-09.jpg" alt="" loading="eager">
+      <!-- same set repeated once more, back to back — required for the
+           seamless loop (see .rs-marquee in research.css) -->
+      <img src="assets/img/research/floor8/img-01.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor8/img-02.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor8/img-03.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor8/img-04.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor8/img-05.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor8/img-06.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor8/img-07.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor8/img-08.jpg" alt="" loading="eager">
+      <img src="assets/img/research/floor8/img-09.jpg" alt="" loading="eager">
+    </div>
+  </div>
+  <div class="rs-chapter__text rs-chapter__text--wide">
+    <p><span class="lang-he">בתהליך השחזור ביקשתי להפיח חיים חדשים באיורים המקוריים של מחזור רוטשילד.<br>שמרתי על הצבעוניות, הדמויות והשפה החזותית של כתב היד, אך תרגמתי אותם למרחב<br>תלת ממדי באמצעות נפח, עומק וטקסטורה. בהמשך הנפשתי את האיורים, כך שהדימויים<br>ההיסטוריים קיבלו תנועה ונוכחות עכשווית, מבלי לאבד את אופיים המקורי.</span><span class="lang-en">In the reconstruction process, I sought to breathe new life into the original illustrations of the Rothschild Mahzor. I kept the coloring, the figures, and the visual language of the manuscript, but translated them into three-dimensional space through volume, depth, and texture. I then animated the illustrations, so that the historical images gained movement and a contemporary presence, without losing their original character.</span><span class="lang-it">Nel processo di ricostruzione, ho cercato di infondere nuova vita nelle illustrazioni originali del Machazor Rothschild. Ho mantenuto la cromia, le figure e il linguaggio visivo del manoscritto, ma le ho tradotte in uno spazio tridimensionale attraverso volume, profondità e texture. Ho poi animato le illustrazioni, affinché le immagini storiche acquisissero movimento e una presenza contemporanea, senza perdere il loro carattere originale.</span></p>
+  </div>
+</section>
+
+<!-- קומה 8 — מסע הבעלות והמורשת -->
+<section class="rs-section rs-chapter">
+  <h2 class="rs-chapter__title"><span class="lang-he">מסע הבעלות<br>והמורשת</span><span class="lang-en">The Journey of Ownership<br>and Legacy</span><span class="lang-it">Il viaggio della proprietà<br>e dell'eredità</span></h2>
+  <div class="rs-strokes">
+    <img src="assets/img/research/floor9/main.png" alt="" loading="eager">
+  </div>
+  <div class="rs-chapter__text rs-chapter__text--wide">
+    <p><span class="lang-he">המחזור הוזמן עבור משפחת גאליקו ובהמשך עבר ככל הנראה למשפחת נורסה כמתנת נישואים. סמלי שתי<br>המשפחות שולבו בעיטורים והפכו את הספר גם לחפץ משפחתי ולסמל מעמד.מאות שנים<br>לאחר מכן הגיע כתב היד למשפחת רוטשילד. לאחר שעבר בין בני המשפחה<br>ונשדד בזמן מלחמת העולם השנייה, הוא הוחזר לבעליו. בשנת אלף<br>תשע מאות שישים ושש נתרם לספריית בית המדרש<br>לרבנים באמריקה בניו יורק, שם הוא שמור כיום.</span><span class="lang-en">The mahzor was commissioned for the Galiko family, and later apparently passed to the Norsa family as a wedding gift. The emblems of both families were woven into the ornamentation, turning the book into a family object and a symbol of status. Centuries later, the manuscript reached the Rothschild family. After passing between family members and being looted during the Second World War, it was returned to its owners. In nineteen sixty-six it was donated to the library of the Jewish Theological Seminary of America in New York, where it is kept today.</span><span class="lang-it">Il machazor fu commissionato per la famiglia Galiko e in seguito passò, a quanto pare, alla famiglia Norsa come dono di nozze. Gli stemmi di entrambe le famiglie furono intrecciati negli ornamenti, trasformando il libro anche in un oggetto di famiglia e in un simbolo di status. Secoli dopo, il manoscritto giunse alla famiglia Rothschild. Dopo essere passato tra i membri della famiglia ed essere stato saccheggiato durante la Seconda guerra mondiale, fu restituito ai suoi proprietari. Nel 1966 fu donato alla biblioteca del Jewish Theological Seminary of America a New York, dove è conservato ancora oggi.</span></p>
   </div>
 </section>
 
 <section class="credits" id="credits">
   <div class="credits__row">
-    <h2 class="credits__title">קמרינו<br>חצי קורסיבי</h2>
+    <h2 class="credits__title"><span class="lang-he">קמרינו<br>חצי קורסיבי</span><span class="lang-en">Camerino<br>Semi-Cursive</span><span class="lang-it">Camerino<br>Semicorsivo</span></h2>
     <div class="credits__info">
-      <div class="credits__group">
-        <h3 class="credits__label">הנחייה</h3>
-        <p>כפיר מלכה ורמי רשתי</p>
-      </div>
-      <div class="credits__group">
-        <h3 class="credits__label">תודות</h3>
-        <p>פרופ' שלום צבר</p>
-        <p>Abraham Judah ben Yehiel of Camerino</p>
-        <p>JTS library, NY</p>
-        <p>Biblioteca Queriniana, Brescia, IT</p>
+      <div class="credits__group credits__group--biblio">
+        <h3 class="credits__label"><span class="lang-he">תודות וביבליוגרפיה</span><span class="lang-en">Acknowledgments &amp; Bibliography</span><span class="lang-it">Ringraziamenti e bibliografia</span></h3>
+
+        <h4 class="credits__biblio-heading"><span class="lang-he">1. מחקרי יסוד ומונוגרפיות על מחזור רוטשילד</span><span class="lang-en">1. Foundational Studies and Monographs on the Rothschild Mahzor</span><span class="lang-it">1. Studi fondamentali e monografie sul Machazor Rothschild</span></h4>
+        <p dir="ltr">Wachtel, David. "How to Date a Rothschild." <em>Studia Rosenthaliana</em>, vol. 38/39, 2005/2006, pp. 160–168.</p>
+        <p dir="ltr">Schmelzer, Menahem. "The Liturgy of the Rothschild Mahzor." In <em>Studies in Jewish Bibliography and Medieval Hebrew Poetry: Collected Essays</em>. New York: The Jewish Theological Seminary of America, 2006, pp. 254–259.</p>
+        <p dir="ltr">Cohen, Evelyn M. "Elia da Vigevano's Prayer Books of 1490." <em>Studia Rosenthaliana</em>, vol. 38/39, 2005/2006, pp. 169–177.</p>
+        <p dir="ltr">Cohen, Evelyn M., Menahem Schmelzer, and Gerson D. Cohen. <em>The Rothschild Mahzor: Florence, 1490</em>. New York: The Library of The Jewish Theological Seminary of America, 1983.</p>
+
+        <h4 class="credits__biblio-heading"><span class="lang-he">2. תערוכות, קטלוגים וקובצי מחקר על אמנות הרנסאנס והספר העברי</span><span class="lang-en">2. Exhibitions, Catalogues, and Collected Studies on Renaissance Art and the Hebrew Book</span><span class="lang-it">2. Mostre, cataloghi e raccolte di studi sull'arte rinascimentale e il libro ebraico</span></h4>
+        <p dir="ltr">Busi, Giulio, and Silvana Greco, eds. <em>Il Rinascimento parla ebraico</em>. Cinisello Balsamo: Silvana Editoriale, 2019.</p>
+        <p dir="ltr">Kogman-Appel, Katrin, and Mati Meyer, eds. <em>Between Judaism and Christianity: Art Historical Essays in Honor of Elisheva Revel-Neher</em>. Leiden and Boston: Brill, 2008.</p>
+        <p dir="ltr">Cohen, Evelyn M. "A Woman's Hebrew Prayer Book and the Art of Mariano del Buono." In <em>Between Judaism and Christianity</em>, edited by Katrin Kogman-Appel and Mati Meyer, pp. 371–378. Leiden and Boston: Brill, 2008.</p>
+
+        <h4 class="credits__biblio-heading"><span class="lang-he">3. מחקרים פליאוגרפיים, גנאלוגיים והיסטוריים</span><span class="lang-en">3. Paleographic, Genealogical, and Historical Studies</span><span class="lang-it">3. Studi paleografici, genealogici e storici</span></h4>
+        <p dir="ltr">Contessa, Andreina. "Jewish Book Collection and Patronage in Renaissance Italy." In <em>Between Judaism and Christianity</em>, pp. 37–58. Leiden and Boston: Brill, 2008.</p>
+        <p dir="ltr">Contessa, Andreina. "Jewish Book Collection and Patronage in Renaissance Italy." In <em>Il Rinascimento parla ebraico</em>, pp. 158–169. Cinisello Balsamo: Silvana Editoriale, 2019.</p>
+        <p dir="ltr">Norsa, Paolo. <em>Una famiglia di banchieri: I Norsa, 1350–1950</em>. Napoli: Bollettino dell'Archivio Storico del Banco di Napoli, 1953–1959.</p>
+        <p dir="ltr">Narkiss, Bezalel. "The Seal of Solomon the Scribe: The Illustrations of the Albenc Pentateuch of 1340." In <em>Between Judaism and Christianity</em>, pp. 319–351. Leiden and Boston: Brill, 2008.</p>
+        <p dir="ltr">Narkiss, Bezalel. <em>Hebrew Illuminated Manuscripts</em>. Jerusalem: Keter Publishing House, 1969/1978.</p>
+        <p dir="ltr">Frojmovic, Eva. "Jewish Scribes and Christian Illuminators: Interstitial Encounters and Cultural Negotiation." In <em>Between Judaism and Christianity</em>, pp. 281–305. Leiden and Boston: Brill, 2008.</p>
+        <p dir="ltr">Halperin, Dalia-Ruth. "The Hidden Couple: An Unexecuted Under-Drawing in the Catalan Micrography Mahzor." In <em>Between Judaism and Christianity</em>, pp. 353–369. Leiden and Boston: Brill, 2008.</p>
+
+        <h4 class="credits__biblio-heading"><span class="lang-he">4. מאגרי מידע, ארכיונים ומהדורות פקסימיליה</span><span class="lang-en">4. Databases, Archives, and Facsimile Editions</span><span class="lang-it">4. Banche dati, archivi ed edizioni facsimile</span></h4>
+        <p dir="ltr">The Bezalel Narkiss Index of Jewish Art and Material Culture. Center for Jewish Art, The Hebrew University of Jerusalem. Item: Rothschild Mahzor, Florence, 1490, JTS Ms. 8892.</p>
+        <p dir="ltr">The Library of The Jewish Theological Seminary of America, New York. Special Collections, MS 8892, Rothschild Mahzor.</p>
+        <p dir="ltr">Facsimile Editions, London. <em>The Rothschild Miscellany</em>. Companion volume by M. Beit-Arié, L. Mortara Ottolenghi, I. Fishof, et al. London, 1989.</p>
       </div>
     </div>
+  </div>
+  <div class="credits__rights">
+    <p><span class="lang-he">כל התמונות, הצילומים ודימויי כתב היד המוצגים באתר זה (מחזור רוטשילד, JTS Ms. 8892) מובאים באדיבות ספריית בית המדרש לרבנים באמריקה (The Library of The Jewish Theological Seminary – JTS), ניו יורק. זכויות היוצרים והבעלות על הצילומים שמורות לספרייה בלבד. <a href="https://www.jtsa.edu" target="_blank" rel="noopener">jtsa.edu</a></span><span class="lang-en">All images, photographs, and depictions of the manuscript shown on this site (Rothschild Mahzor, JTS Ms. 8892) are provided courtesy of The Library of The Jewish Theological Seminary of America (JTS), New York. Copyright and ownership of the photographs remain with the library alone. <a href="https://www.jtsa.edu" target="_blank" rel="noopener">jtsa.edu</a></span><span class="lang-it">Tutte le immagini, le fotografie e le riproduzioni del manoscritto mostrate su questo sito (Machazor Rothschild, JTS Ms. 8892) sono fornite per gentile concessione di The Library of The Jewish Theological Seminary of America (JTS), New York. I diritti d'autore e la proprietà delle fotografie restano esclusivamente della biblioteca. <a href="https://www.jtsa.edu" target="_blank" rel="noopener">jtsa.edu</a></span></p>
   </div>
   <div class="credits__footer">
     <div class="credits__links">
@@ -151,6 +341,6 @@
   </div>
 </section>
 
-<script src="js/research.js?v=4"></script>
+<script src="js/research.js?v=25"></script>
 </body>
 </html>

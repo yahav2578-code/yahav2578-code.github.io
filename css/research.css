@@ -35,6 +35,94 @@
   background: rgba(250, 249, 246, 0.95);
 }
 
+/* Language switch: fixed top-right (mirrors .research__close on the
+   opposite side), three buttons (HE/EN/IT). Every translatable string on
+   the page is authored as a .lang-he/.lang-en/.lang-it trio — setting
+   body.lang-en or body.lang-it swaps which one shows, see initLangSwitch
+   in research.js. */
+.lang-switch {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 20;
+  display: flex;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 20px;
+  background: rgba(250, 249, 246, 0.7);
+}
+
+.lang-switch__btn {
+  height: 28px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  border: none;
+  background: transparent;
+  color: var(--ink-soft);
+  font-family: "NarkissBlock", sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.lang-switch__btn:hover {
+  color: var(--ink);
+}
+
+.lang-switch__btn.is-active {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--ink);
+}
+
+/* Hebrew is the default; English/Italian are hidden until body carries the
+   matching lang-en/lang-it class. Camerino (used for every title) only has
+   Hebrew glyphs, so headings must fall back to NarkissBlock in either
+   non-Hebrew mode — the body copy already uses NarkissBlock and needs no
+   override.
+   Scoped to `span.lang-en`/`span.lang-he`/`span.lang-it` specifically (not
+   a bare `.lang-en` class selector) — body itself carries the "lang-en"/
+   "lang-it" class as the active-language flag, and a bare selector would
+   match body too, collapsing the whole page via `display: none`. */
+span.lang-en,
+span.lang-it {
+  display: none;
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+span.lang-he {
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+body.lang-en span.lang-he,
+body.lang-it span.lang-he {
+  display: none;
+}
+
+body.lang-en span.lang-en {
+  display: inline;
+}
+
+body.lang-it span.lang-it {
+  display: inline;
+}
+
+body.lang-en .rs-hero__title,
+body.lang-en .rs-hero__subtitle,
+body.lang-en .rs-chapter__title,
+body.lang-en .credits__title,
+body.lang-it .rs-hero__title,
+body.lang-it .rs-hero__subtitle,
+body.lang-it .rs-chapter__title,
+body.lang-it .credits__title {
+  font-family: "NarkissBlock", sans-serif;
+}
+
 .rs-hero {
   min-height: 100svh;
   display: flex;
@@ -52,6 +140,10 @@
   align-items: center;
   gap: 1.5rem;
   text-align: center;
+  /* Without this, the parallax drift in initHeroCreatures (research.js)
+     snaps straight to each new mousemove position instead of easing
+     between them — matches .hero__content's transition in style.css. */
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .rs-hero__title {
@@ -100,16 +192,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10vh 50px;
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.rs-chapter.is-visible {
-  opacity: 1;
-  transform: translateY(0);
+  padding: 10vh var(--side-pad);
 }
 
 .rs-chapter__title {
@@ -140,32 +223,104 @@
 
 .rs-chapter__text {
   flex: 1 1 380px;
-  font-family: "Camerino", serif;
+  min-width: 0;
+  font-family: "NarkissBlock", sans-serif;
   font-size: clamp(1rem, 1.6vw, 1.2rem);
   line-height: 1.5;
   color: var(--ink);
+  /* Avoids a lone word stranded on its own wrapped line — matters most for
+     the English translations, which flow freely instead of using the
+     hand-placed <br> breaks the Hebrew original uses. */
+  text-wrap: pretty;
 }
 
 .rs-chapter__text p + p {
   margin-top: 1.4em;
 }
 
+/* Used when the text sits stacked below full-width media (e.g. floor 2's
+   marquee) instead of side-by-side with it — wider column, centered,
+   matching that reference layout instead of the narrow side-by-side one. */
+.rs-chapter__text--wide {
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: 1100px;
+  text-align: center;
+}
+
 .rs-chapter__media {
   flex: 1 1 380px;
+  min-width: 0;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: 1.5rem;
 }
 
 .rs-chapter__media img {
+  min-width: 0;
   max-width: 100%;
   border-radius: 4px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
 }
 
 .rs-chapter__media--single img {
-  max-width: 420px;
+  max-width: min(420px, 100%);
+}
+
+/* Hover-reveal: a second image sits hidden behind the first, only visible
+   through a soft circular mask that follows the cursor (--rx/--ry, set via
+   mousemove in research.js). A feathered radial-gradient edge (solid center
+   fading to transparent) is what gives it a soft, liquid-like quality
+   instead of a hard-edged spotlight. */
+.rs-reveal {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+}
+
+/* the container above already carries the shadow/radius for the stacked
+   pair as a whole — without this, the generic .rs-chapter__media img rule
+   would put its own shadow on each of the two stacked images individually */
+.rs-reveal img {
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.rs-reveal__base {
+  display: block;
+  width: 100%;
+}
+
+.rs-reveal__hidden {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  -webkit-mask-image: radial-gradient(circle var(--reveal-radius, 140px) at var(--rx, 50%) var(--ry, 50%), #000 55%, transparent 100%);
+  mask-image: radial-gradient(circle var(--reveal-radius, 140px) at var(--rx, 50%) var(--ry, 50%), #000 55%, transparent 100%);
+}
+
+.rs-reveal:hover .rs-reveal__hidden {
+  opacity: 1;
+}
+
+/* Floor 6: two images (top layer / bottom layer, matching the reveal pair
+   above) spanning full-bleed edge-to-edge instead of sitting inside the
+   normal page padding — same technique as .plant-ribbon on the home page:
+   grow past the padding by exactly its own width, then pull back in with
+   an equal negative margin. A larger mask radius suits the much bigger
+   full-width image better than the default (tuned for a narrow column). */
+.rs-reveal--full {
+  width: calc(100% + 2 * var(--side-pad));
+  margin: 0 calc(-1 * var(--side-pad));
+  --reveal-radius: 260px;
 }
 
 .rs-chapter__media--three {
@@ -239,4 +394,164 @@
   .rs-chapter__img--lg {
     width: 80%;
   }
+}
+
+/* --- Multi-image slider (floors 2, 5, 7): horizontal scroll-snap carousel,
+   not a static grid — drag/swipe or use the prev/next buttons. See
+   initSliders in research.js for the button wiring. */
+.rs-slider-wrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.rs-slider {
+  display: flex;
+  gap: 1.5rem;
+  width: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+
+.rs-slider::-webkit-scrollbar {
+  display: none;
+}
+
+.rs-slider img {
+  scroll-snap-align: center;
+  flex: 0 0 auto;
+  max-height: 340px;
+  width: auto;
+  max-width: 80%;
+  border-radius: 4px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+}
+
+.rs-slider__nav {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.rs-slider__nav button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  font-size: 18px;
+  font-family: "NarkissBlock", sans-serif;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.rs-slider__nav button:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+@media (max-width: 860px) {
+  .rs-slider img {
+    max-height: 220px;
+  }
+}
+
+/* --- Marquee (floor 2): images scroll continuously right-to-left on their
+   own clock — not user-driven like .rs-slider. The track's image list is
+   duplicated once in the HTML — the position is driven directly by JS
+   (requestAnimationFrame in initMarquees, research.js), not a CSS
+   @keyframes animation. A plain incrementing pixel offset wrapped with
+   modulo against one set's width can never "run out" the way a
+   fixed-duration CSS animation's internal iteration handling might on some
+   engines — it's just arithmetic, verified to keep advancing indefinitely.
+   Hover slows it by changing the JS rate variable, not by touching
+   anything animation-related. */
+.rs-marquee {
+  width: 100%;
+  overflow: hidden;
+  /* Forced to ltr regardless of the page's own dir="rtl" — confirmed by
+     direct measurement that in RTL, DOM order places each next image
+     further LEFT (off-screen), leaving no runway of not-yet-seen content
+     on the right for new images to slide in from. In ltr, DOM order places
+     later images further RIGHT (naturally off-screen, waiting) — exactly
+     the standard, well-tested marquee setup — so a plain translateX(-x)
+     sweep actually carries every image through the visible window. */
+  direction: ltr;
+}
+
+.rs-marquee__track {
+  display: flex;
+  gap: 1.5rem;
+  width: max-content;
+  /* Without this, the browser has no reason to promote the track to its
+     own GPU layer — every rAF-driven translateX (see initMarquees in
+     research.js) can end up repainting the full row of large source
+     images instead of just cheaply re-compositing it, which reads as
+     small stutters even though the underlying position math is smooth. */
+  will-change: transform;
+}
+
+.rs-marquee__track img {
+  height: 550px;
+  width: auto;
+  flex: 0 0 auto;
+  border-radius: 4px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+}
+
+@media (max-width: 860px) {
+  .rs-marquee__track img {
+    height: 360px;
+  }
+}
+
+/* --- Running image loop (floors 3, 4, 6, 8): an autoplaying frame cycle —
+   NOT tied to scroll position like the home page's video-scrub sections.
+   See initRunningLoops in research.js. Hovering slows the frame interval
+   down rather than stopping it, per explicit request. --- */
+.rs-loop {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+}
+
+.rs-loop img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* --- Floor 4: letter-design stroke diagrams, alongside the running loop --- */
+.rs-strokes {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.rs-strokes img {
+  width: 100%;
+  max-width: 700px;
+}
+
+/* --- Floor 10: closing full-alphabet display --- */
+.rs-alphabet {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  gap: 2vh 1vw;
+  width: 100%;
+  max-width: 1100px;
+  padding: 4vh 0;
+}
+
+.rs-alphabet span {
+  font-family: "Camerino", serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  text-align: center;
+  color: var(--ink);
 }

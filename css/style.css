@@ -19,6 +19,10 @@
   --bg: #faf9f6;
   --ink: #1a1a1a;
   --ink-soft: #3a3a38;
+  /* the page's standard outer side padding — a fixed 50px was fine on
+     desktop but ate a disproportionate share of the width on a narrow
+     phone; scales down toward 16px instead of staying fixed. */
+  --side-pad: clamp(16px, 4vw, 50px);
 }
 
 * {
@@ -127,7 +131,12 @@ body {
 }
 
 .hero__title {
-  font-size: clamp(3.5rem, 13vw, 10.5rem);
+  /* the old 3.5rem floor was well above what 13vw naturally gives on a real
+     phone width (e.g. 3.17rem at 390px) — clamp() then forced the larger
+     floor value regardless, overflowing the viewport instead of actually
+     shrinking. A much lower floor is just a safety net for extreme cases,
+     not a value real phones should ever hit. */
+  font-size: clamp(1.8rem, 13vw, 10.5rem);
   font-weight: 400;
   line-height: 1;
   letter-spacing: -0.01em;
@@ -137,10 +146,16 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+  /* same reasoning as .hero__title — the old 1.4rem floor sat well above
+     what 2.6vw gives on a real phone width, so it forced oversized text
+     that overflowed/overlapped instead of shrinking. This floor is a
+     safety net, not a value real phones should reach. */
+  font-size: clamp(0.65rem, 2.6vw, 2.1rem);
   line-height: 1.25;
   color: var(--ink-soft);
   margin-top: 6vh;
+  width: 100%;
+  padding: 0 4vw;
 }
 
 .hero__subtitle p {
@@ -171,7 +186,7 @@ body {
 
 /* --- Specimen section: live, editable type-testing rows with a slider adjuster above each --- */
 .specimen {
-  padding: 6vh 50px;
+  padding: 6vh var(--side-pad);
   display: flex;
   flex-direction: column;
   gap: 5vh;
@@ -415,10 +430,10 @@ body {
    (short) content height. --- */
 .plant-ribbon {
   position: relative;
-  /* bleed past .specimen's 50px side padding so the motif truly reaches the
+  /* bleed past .specimen's side padding so the motif truly reaches the
      viewport edge instead of stopping at the row's content box */
-  width: calc(100% + 100px);
-  margin: 0 -50px;
+  width: calc(100% + 2 * var(--side-pad));
+  margin: 0 calc(-1 * var(--side-pad));
   height: 350vh;
 }
 
@@ -443,7 +458,7 @@ body {
 /* --- Strip 4: dragon + phoenix, each with its own live paragraph, then one
    giant edge-to-edge paragraph below both (see initStorySection in main.js) --- */
 .story {
-  padding: 6vh 50px;
+  padding: 6vh var(--side-pad);
   display: flex;
   flex-direction: column;
   gap: 5vh;
@@ -452,6 +467,7 @@ body {
 .story-creatures {
   display: flex;
   align-items: flex-start;
+  flex-wrap: wrap;
   gap: 4%;
   width: 100%;
 }
@@ -463,13 +479,21 @@ body {
   flex-direction: column;
 }
 
+@media (max-width: 560px) {
+  /* below this width a 48% column is too narrow for a full slider adjuster
+     row (label + fixed 100px slider + value) to fit even after wrapping */
+  .story-creature {
+    width: 100%;
+  }
+}
+
 /* bleeds past .story's 50px side padding so the illustration reaches the
    viewport edge, same tall-wrapper + sticky-canvas technique as
    .plant-ribbon */
 .story-image {
   position: relative;
-  width: calc(100% + 100px);
-  margin: 0 -50px;
+  width: calc(100% + 2 * var(--side-pad));
+  margin: 0 calc(-1 * var(--side-pad));
   height: 350vh;
 }
 
@@ -503,9 +527,23 @@ body {
   position: sticky;
   top: 0;
   height: 100svh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  /* grid + place-items:center stacks every child in the same centered cell
+     (unlike flex, which lines siblings up side by side) — that's what lets
+     .zodiac__link sit centered directly on top of .zodiac__wheel, in the
+     wheel's own still center while the rings rotate around it.
+     grid-template-rows/columns: minmax(0,1fr) is required here — a plain
+     `1fr` track still carries an implicit `auto` (content-based) minimum
+     size, so the row grows to fit the wheel's own (tall) content anyway;
+     minmax(0, 1fr) removes that automatic minimum and actually caps the
+     track at the container's real height. Without this, a wheel taller
+     than the viewport ends up pinned to the top with its bottom half
+     clipped instead of truly centered (flex never has this problem —
+     it always centers against the container's own size regardless of
+     content size). */
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
   overflow: hidden;
   background: var(--bg);
 }
@@ -513,6 +551,7 @@ body {
 .zodiac__wheel {
   width: min(70vw, 800px);
   height: auto;
+  grid-area: 1 / 1;
 }
 
 .zodiac__wheel svg {
@@ -522,9 +561,29 @@ body {
   overflow: visible;
 }
 
+.zodiac__link {
+  grid-area: 1 / 1;
+  align-self: center;
+  /* transform, not margin-top — margin on a grid item sharing a cell with
+     .zodiac__wheel would grow that cell's own track and drag the wheel
+     down with it (this exact bug happened before); transform repositions
+     after layout, so it only moves this element. */
+  transform: translate(0px, 20px);
+  z-index: 1;
+  font-family: "Camerino", serif;
+  font-size: 20px;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.zodiac__link:hover {
+  text-decoration: underline;
+}
+
 /* --- Closing credits strip --- */
 .credits {
-  padding: 8vh 50px 4vh;
+  padding: 8vh var(--side-pad) 4vh;
   font-family: "NarkissBlock", sans-serif;
   color: var(--ink);
 }
@@ -533,6 +592,7 @@ body {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 4vw;
 }
 
@@ -540,10 +600,18 @@ body {
 .credits__title {
   font-family: "Camerino", serif;
   font-weight: 400;
-  font-size: clamp(3.25rem, 7.8vw, 6.5rem);
+  font-size: clamp(2rem, 7.8vw, 6.5rem);
   line-height: 1.05;
   max-width: 50%;
   text-align: center;
+}
+
+@media (max-width: 700px) {
+  .credits__title,
+  .credits__info {
+    max-width: 100%;
+    flex: 1 1 100%;
+  }
 }
 
 .credits__info {
@@ -558,11 +626,53 @@ body {
 .credits__group p {
   color: var(--ink-soft);
   line-height: 1.6;
+  text-wrap: pretty;
 }
 
 .credits__label {
   font-weight: 700;
   margin-bottom: 0.3em;
+}
+
+/* Bibliography: much smaller than the other credit groups (a long
+   scholarly list, not a short thanks line) — kept in .credits__info,
+   which already sits on the left side of the RTL credits__row. */
+.credits__group--biblio {
+  max-width: 480px;
+  font-size: 0.72rem;
+  line-height: 1.55;
+}
+
+.credits__biblio-heading {
+  font-weight: 700;
+  font-size: 0.78rem;
+  margin: 1.4em 0 0.5em;
+}
+
+.credits__group--biblio > .credits__biblio-heading:first-of-type {
+  margin-top: 0;
+}
+
+.credits__group--biblio p {
+  margin-bottom: 0.9em;
+  text-align: left;
+}
+
+/* Rights statement (JTS photo credit): its own line below the bibliography,
+   ahead of the footer's border-top separator — small and muted like the
+   bibliography, but full-width and centered rather than a left column. */
+.credits__rights {
+  max-width: 700px;
+  margin: 5vh auto 0;
+  font-size: 0.72rem;
+  line-height: 1.6;
+  text-align: center;
+  color: var(--ink-soft);
+  text-wrap: pretty;
+}
+
+.credits__rights a {
+  color: inherit;
 }
 
 .credits__footer {
@@ -604,7 +714,7 @@ body {
 }
 
 .charmap__header {
-  padding: 0 50px;
+  padding: 0 var(--side-pad);
 }
 
 .charmap__header h2 {
@@ -617,6 +727,7 @@ body {
 .charmap__row {
   display: flex;
   align-items: stretch;
+  flex-wrap: wrap;
 }
 
 .charmap__stage {
@@ -705,6 +816,18 @@ body {
 
 .charmap__category {
   width: 100%;
+}
+
+@media (max-width: 700px) {
+  /* side-by-side 50/50 squeezes the glyph stage down to a sliver too narrow
+     for its (fixed-px, precisely-calibrated) canvas math — stack instead so
+     each half keeps a usable width; resizeCanvas() already re-measures the
+     stage's live width on resize, so nothing in main.js needs to change. */
+  .charmap__stage,
+  .charmap__categories {
+    width: 100%;
+    padding: 0 var(--side-pad);
+  }
 }
 
 .charmap__category h6 {
