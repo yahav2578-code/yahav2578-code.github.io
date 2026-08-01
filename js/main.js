@@ -512,8 +512,24 @@ function buildSpecimenRow(section, rowConfig) {
     );
 
     const trimTop = inkTop - textTop; // dead space above the line box, to remove
-    text.style.setProperty("--trim-top", `${-trimTop}px`);
-    text.style.setProperty("--trim-bottom", `${overshoot}px`);
+
+    // Safety bound: Range.getClientRects() and canvas TextMetrics are the
+    // right tools for this (see above), but they're still browser-specific
+    // measurements of a font whose own metrics are known broken — and
+    // Safari has been confirmed to report wildly different values here than
+    // Chrome for this same font/content, large enough to shove the ink into
+    // the adjuster row above it. A legitimate trim is a small fine-tuning
+    // nudge (a handful of px, or low tens for big decorative tails at large
+    // sizes) — never a large fraction of the font's own size. Clamping to
+    // that keeps a bad cross-browser measurement from ever doing more than
+    // a bounded, harmless misalignment instead of a full row collision.
+    const fontSizePx = parseFloat(cs.fontSize) || 0;
+    const maxCorrection = fontSizePx * 0.2;
+    const clampedTrimTop = Math.max(-maxCorrection, Math.min(maxCorrection, trimTop));
+    const clampedOvershoot = Math.min(overshoot, maxCorrection);
+
+    text.style.setProperty("--trim-top", `${-clampedTrimTop}px`);
+    text.style.setProperty("--trim-bottom", `${clampedOvershoot}px`);
   }
 
   // responsiveFs()'s clamp() scales font-size against viewport width, and
