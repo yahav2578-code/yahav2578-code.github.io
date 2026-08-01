@@ -25,7 +25,18 @@ function initHeroIntro() {
   const title = document.querySelector(".hero__title");
   const subtitle = document.querySelector(".hero__subtitle");
   setTimeout(() => title.classList.add("is-visible"), 300);
-  typeInText(subtitle, { charStagger: 60, lineGapMs: 95, startDelay: 424 });
+
+  // Must wait for "Camerino" to actually finish loading before typing a
+  // single character in — on a fast local disk the font wins the race
+  // against the timers below anyway, but over a real network (e.g. GitHub
+  // Pages) it can still be loading when the first characters appear. Those
+  // render in the browser's plain serif fallback, which is nowhere near
+  // Camerino's width, so once the real font swaps in mid-animation every
+  // line reflows at once — reads as lines jumping and colliding into each
+  // other. Same reasoning as buildSpecimenRow's identical guard below.
+  document.fonts.ready.then(() => {
+    typeInText(subtitle, { charStagger: 60, lineGapMs: 95, startDelay: 424 });
+  });
 
   // Decorative creatures drift a little toward the cursor as it moves over
   // the hero — a light hover-parallax, not a drag; the CSS transition (not
