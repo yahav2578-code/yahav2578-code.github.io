@@ -475,21 +475,21 @@ function buildSpecimenRow(section, rowConfig) {
   // broken — see the character-map calibration work) that measurement is
   // browser-specific: Chrome's version of the gap is small (a handful of
   // px), but Safari was directly confirmed (via its own console) to report
-  // a much larger one for the same font/content — every row hit the 20%
-  // safety clamp below. A negative margin that size also turned out to
-  // visually paint the glyphs above this element's own
-  // getBoundingClientRect() top in Safari specifically, bleeding into the
-  // adjuster row above regardless of the clamp.
+  // a much larger one for the same font/content.
   //
-  // The fix isn't to stop trimming (that loses the tight fit the design
-  // wants and did visibly regress it) — it's `.specimen-row__crop`'s own
-  // `overflow: hidden` (see style.css): that establishes a block formatting
-  // context, so a negative margin here can no longer collapse through to
-  // shift the crop itself, and if a bad measurement ever tries to push the
-  // ink past the crop's own top edge, it gets clipped right there instead
-  // of bleeding into the adjuster. Worst case in a browser with a bad
-  // reading is a barely-noticeable clipped pixel or two — never a full
-  // row collision.
+  // That used to mean capping the correction at a fraction of the font's
+  // own size, to stop a bad reading from doing anything dramatic — but
+  // with nothing else containing it, that same cap also stopped Safari's
+  // (legitimately larger, for whatever reason) correction from ever
+  // fully closing its gap, most visibly on the biggest display rows. Now
+  // that `.specimen-row__crop` has its own `overflow: hidden` (see
+  // style.css): that establishes a block formatting context, so a
+  // negative margin here can no longer collapse through to shift the crop
+  // itself, and any ink a measurement pushes past the crop's own top edge
+  // just gets clipped right there instead of bleeding into the adjuster.
+  // The clamp's job is already done by that CSS boundary, so trim-top is
+  // applied in full, in every browser, trusting the crop to contain
+  // whatever it produces.
   function relayout() {
     text.style.setProperty("--trim-top", "0px");
     text.style.setProperty("--trim-bottom", "0px");
@@ -513,18 +513,8 @@ function buildSpecimenRow(section, rowConfig) {
     );
 
     const trimTop = inkTop - textTop; // dead space above the line box, to remove
-
-    // Bound both corrections to a fraction of the font's own size — a
-    // legitimate trim is always a small fine-tuning nudge, never a large
-    // fraction of the font size. This is a second line of defense on top
-    // of the crop's own overflow:hidden, not the only one.
-    const fontSizePx = parseFloat(cs.fontSize) || 0;
-    const maxCorrection = fontSizePx * 0.2;
-    const clampedTrimTop = Math.max(-maxCorrection, Math.min(maxCorrection, trimTop));
-    const clampedOvershoot = Math.min(overshoot, maxCorrection);
-
-    text.style.setProperty("--trim-top", `${-clampedTrimTop}px`);
-    text.style.setProperty("--trim-bottom", `${clampedOvershoot}px`);
+    text.style.setProperty("--trim-top", `${-trimTop}px`);
+    text.style.setProperty("--trim-bottom", `${overshoot}px`);
   }
 
   // responsiveFs()'s clamp() scales font-size against viewport width, and
