@@ -468,36 +468,32 @@ function buildSpecimenRow(section, rowConfig) {
   // Same "leading trim" technique as AllCaps' own tester (found via their
   // computed --tester-before-marginTop / --tester-after-marginBottom): a
   // zero-size ::before/::after spacer with a calculated margin, instead of a
-  // margin on the text box itself + an explicit clipped height. That means
-  // the row's own box model does the collapsing — no overflow:hidden, so a
-  // slightly-off measurement can never hard-clip a glyph, just under/over
-  // space it a little.
+  // margin on the text box itself + an explicit clipped height.
   //
-  // Range.getClientRects() reflects the browser's own real layout of the
-  // line box, and empirically it already tracks the real drawn ink closely
-  // for this font — confirmed on a live 750px row, where inkTop was only 4px
-  // off from the line box's own top. An earlier version of this function
-  // additionally added a canvas.measureText()-based "ascent gap"
-  // (fontBoundingBoxAscent − actualBoundingBoxAscent) on top of that,
-  // meant to catch cases where the line box's declared ascent diverges from
-  // the ink — but for this font (whose OS/2/hhea metrics are known broken —
-  // see the character-map calibration work) that canvas-based gap doesn't
-  // describe the same box the Range measures at all: it was measured at
-  // 237px on that same row, when only 4px of correction was actually
-  // needed. Adding it double-counted the correction and pulled the ink up
-  // by 241px total — at large display sizes (750px+) that's enough to push
-  // the ink entirely above its own row, rendering it invisible above
-  // whatever precedes it on the page. Range alone is the reliable measure
-  // here; canvas's declared-metric-based gap is not.
+  // --trim-top used to pull the ink up via a *negative* margin on the
+  // ::before spacer, based on Range.getClientRects() measuring the dead
+  // space above the line box. That measurement is browser-specific for a
+  // font whose own metrics are known broken (see the character-map
+  // calibration work) — Chrome's version of it was small and safe, but
+  // Safari was directly confirmed (via its own console) to report a much
+  // larger gap for the same font/content, and worse, a negative margin
+  // that big visually paints the glyphs above this element's own
+  // getBoundingClientRect() top in Safari specifically — so even a clamped
+  // version of that correction still let the ink bleed into the adjuster
+  // row above it. A capped-but-still-negative margin was not a safe
+  // enough bound; only *never pulling upward at all* is. --trim-top is
+  // fixed at 0 for exactly that reason — a small, harmless amount of extra
+  // leading above the ink in every browser, instead of a browser-specific
+  // collision that has now broken production twice.
+  //
+  // --trim-bottom is unaffected by that risk: it only ever *adds* margin
+  // below the last line (for camerino's decorative tails, which draw
+  // deeper than the font's declared descent), so even a wrong/oversized
+  // value can push the *next* element further away — never cause an
+  // overlap the way a negative top margin can.
   function relayout() {
     text.style.setProperty("--trim-top", "0px");
     text.style.setProperty("--trim-bottom", "0px");
-    const textTop = text.getBoundingClientRect().top;
-    const range = document.createRange();
-    range.selectNodeContents(text);
-    const rects = Array.from(range.getClientRects());
-    if (!rects.length) return;
-    const inkTop = rects[0].top;
 
     const lines = getRenderedLines(text);
     const cs = getComputedStyle(text);
@@ -511,24 +507,12 @@ function buildSpecimenRow(section, rowConfig) {
       (lastMetrics.actualBoundingBoxDescent || 0) - (lastMetrics.fontBoundingBoxDescent || 0)
     );
 
-    const trimTop = inkTop - textTop; // dead space above the line box, to remove
-
-    // Safety bound: Range.getClientRects() and canvas TextMetrics are the
-    // right tools for this (see above), but they're still browser-specific
-    // measurements of a font whose own metrics are known broken — and
-    // Safari has been confirmed to report wildly different values here than
-    // Chrome for this same font/content, large enough to shove the ink into
-    // the adjuster row above it. A legitimate trim is a small fine-tuning
-    // nudge (a handful of px, or low tens for big decorative tails at large
-    // sizes) — never a large fraction of the font's own size. Clamping to
-    // that keeps a bad cross-browser measurement from ever doing more than
-    // a bounded, harmless misalignment instead of a full row collision.
+    // Same cross-browser-measurement caution as above: bound it to a small
+    // fraction of the font's own size so a bad reading can only ever add a
+    // little too much trailing space, never something dramatic.
     const fontSizePx = parseFloat(cs.fontSize) || 0;
-    const maxCorrection = fontSizePx * 0.2;
-    const clampedTrimTop = Math.max(-maxCorrection, Math.min(maxCorrection, trimTop));
-    const clampedOvershoot = Math.min(overshoot, maxCorrection);
+    const clampedOvershoot = Math.min(overshoot, fontSizePx * 0.2);
 
-    text.style.setProperty("--trim-top", `${-clampedTrimTop}px`);
     text.style.setProperty("--trim-bottom", `${clampedOvershoot}px`);
   }
 
